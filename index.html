@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VIRIDIS — České skleníky z ohýbaného skla</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── RESET & BASE ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0e0e0e;
+      --bg-2:      #141414;
+      --bg-3:      #1a1a1a;
+      --gold:      #c9a96e;
+      --gold-dim:  #8a6f3f;
+      --cream:     #f0ebe2;
+      --muted:     #888;
+      --border:    rgba(201, 169, 110, 0.18);
+      --font-ser:  'Cormorant Garamond', Georgia, serif;
+      --font-san:  'Inter', system-ui, sans-serif;
+      --ease:      cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--cream);
+      font-family: var(--font-san);
+      font-size: 15px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    ::selection { background: var(--gold); color: var(--bg); }
+
+    /* ─── SCROLLBAR ─────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+
+    /* ─── NAV ───────────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 72px;
+      background: rgba(14,14,14,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.4s var(--ease);
+    }
+
+    .nav-logo {
+      font-family: var(--font-ser);
+      font-size: 22px;
+      font-weight: 400;
+      letter-spacing: 0.25em;
+      color: var(--cream);
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .nav-logo span { color: var(--gold); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--gold); }
+
+    .nav-cta {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--bg) !important;
+      background: var(--gold);
+      padding: 10px 22px;
+      border-radius: 2px;
+      transition: background 0.3s, opacity 0.3s !important;
+    }
+
+    .nav-cta:hover { background: var(--gold); opacity: 0.85; color: var(--bg) !important; }
+
+    /* hamburger */
+    .nav-burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+    .nav-burger span { display: block; width: 24px; height: 1px; background: var(--cream); transition: all 0.3s; }
+
+    /* ─── HERO ──────────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,169,110,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 80% at 80% 100%, rgba(201,169,110,0.04) 0%, transparent 60%);
+    }
+
+    .hero-line {
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      height: 72px;
+      background: linear-gradient(to bottom, transparent, var(--gold));
+    }
+
+    .hero-content { position: relative; max-width: 820px; }
+
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 28px;
+    }
+
+    .hero-title {
+      font-family: var(--font-ser);
+      font-size: clamp(52px, 8vw, 100px);
+      font-weight: 300;
+      line-height: 1.0;
+      letter-spacing: -0.01em;
+      color: var(--cream);
+      margin-bottom: 32px;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-sub {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      max-width: 480px;
+      margin: 0 auto 52px;
+      line-height: 1.8;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--bg);
+      background: var(--gold);
+      padding: 16px 40px;
+      border-radius: 2px;
+      transition: opacity 0.3s;
+    }
+
+    .btn-primary:hover { opacity: 0.85; }
+
+    .btn-ghost {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--cream);
+      border: 1px solid var(--border);
+      padding: 15px 40px;
+      border-radius: 2px;
+      transition: border-color 0.3s, color 0.3s;
+    }
+
+    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .hero-scroll::after {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, var(--gold-dim), transparent);
+      animation: scrollLine 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollLine {
+      0%, 100% { opacity: 0.4; transform: scaleY(1); transform-origin: top; }
+      50% { opacity: 1; }
+    }
+
+    /* ─── BRAND BAR ─────────────────────────────────────────────── */
+    .brand-bar {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 22px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+      background: var(--bg-2);
+    }
+
+    .brand-bar-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .brand-bar-item .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    /* ─── SECTION WRAPPER ───────────────────────────────────────── */
+    section { padding: 120px 48px; }
+
+    .section-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: var(--font-ser);
+      font-size: clamp(36px, 5vw, 60px);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--cream);
+      max-width: 600px;
+    }
+
+    .section-title em { font-style: italic; color: var(--gold); }
+
+    .section-rule {
+      width: 48px;
+      height: 1px;
+      background: var(--gold);
+      margin: 28px auto 0;
+    }
+
+    /* ─── PRODUCT GRID ──────────────────────────────────────────── */
+    .products-section { background: var(--bg); }
+    .bowls-section { background: var(--bg-2); }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .product-card {
+      position: relative;
+      background: var(--bg-3);
+      overflow: hidden;
+      cursor: pointer;
+      group: true;
+    }
+
+    .product-card:hover .product-img img { transform: scale(1.04); }
+    .product-card:hover .product-overlay { opacity: 1; }
+    .product-card:hover .card-arrow { transform: translate(4px, -4px); }
+
+    .product-img {
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      background: #1c1c1c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .product-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.7s var(--ease);
+      display: block;
+    }
+
+    .img-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      gap: 12px;
+    }
+
+    .img-placeholder-icon {
+      width: 48px;
+      height: 48px;
+      opacity: 0.15;
+    }
+
+    .img-placeholder-name {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      opacity: 0.5;
+    }
+
+    .product-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(14,14,14,0.3);
+      opacity: 0;
+      transition: opacity 0.4s var(--ease);
+    }
+
+    .product-info {
+      padding: 28px 28px 32px;
+      border-top: 1px solid var(--border);
+    }
+
+    .product-model {
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .product-name {
+      font-family: var(--font-ser);
+      font-size: 26px;
+      font-weight: 300;
+      color: var(--cream);
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+
+    .product-dims {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+    }
+
+    .product-desc {
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(240,235,226,0.65);
+      line-height: 1.75;
+      margin-bottom: 20px;
+    }
+
+    .product-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      border: 1px solid rgba(138,111,63,0.35);
+      padding: 4px 10px;
+      border-radius: 1px;
+    }
+
+    .card-arrow {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s var(--ease);
+      color: var(--gold);
+    }
+
+    /* ─── BOWL GRID (larger cards) ──────────────────────────────── */
+    .bowl-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+      gap: 2px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* ─── ABOUT STRIP ───────────────────────────────────────────── */
+    .about-section {
+      background: var(--bg);
+      padding: 120px 48px;
+      border-top: 1px solid var(--border);
+    }
+
+    .about-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .about-text .section-label { text-align: left; margin-bottom: 20px; }
+
+    .about-heading {
+      font-family: var(--font-ser);
+      font-size: clamp(36px, 4vw, 52px);
+      font-weight: 300;
+      line-height: 1.15;
+      color: var(--cream);
+      margin-bottom: 28px;
+    }
+
+    .about-heading em { font-style: italic; color: var(--gold); }
+
+    .about-body {
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(240,235,226,0.65);
+      line-height: 1.9;
+      margin-bottom: 32px;
+    }
+
+    .about-specs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .spec-item {
+      background: var(--bg-2);
+      padding: 20px 22px;
+    }
+
+    .spec-label {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    .spec-value {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--cream);
+    }
+
+    .about-visual {
+      position: relative;
+    }
+
+    .about-img-wrap {
+      aspect-ratio: 3/4;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .about-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .about-badge {
+      position: absolute;
+      bottom: -20px;
+      right: -20px;
+      width: 120px;
+      height: 120px;
+      background: var(--gold);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .about-badge-text {
+      font-family: var(--font-ser);
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--bg);
+      text-align: center;
+      letter-spacing: 0.05em;
+      line-height: 1.3;
+    }
+
+    /* ─── CONTACT ───────────────────────────────────────────────── */
+    .contact-section {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+    }
+
+    .contact-inner {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    input, select, textarea {
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: var(--cream);
+      font-family: var(--font-san);
+      font-size: 14px;
+      font-weight: 300;
+      padding: 14px 18px;
+      outline: none;
+      transition: border-color 0.3s;
+      width: 100%;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    input::placeholder, textarea::placeholder { color: rgba(136,136,136,0.5); }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--gold-dim);
+      background: rgba(201,169,110,0.03);
+    }
+
+    select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a6f3f' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 18px center; padding-right: 44px; }
+
+    textarea { resize: vertical; min-height: 140px; }
+
+    .form-note {
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--muted);
+      margin: 20px 0;
+      line-height: 1.7;
+    }
+
+    .form-submit {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .btn-submit {
+      font-family: var(--font-san);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: var(--gold);
+      border: none;
+      padding: 16px 44px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+
+    .btn-submit:hover { opacity: 0.85; }
+
+    .form-email-link {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .form-email-link:hover { color: var(--gold); }
+
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 60px 40px;
+      border: 1px solid var(--border);
+      background: var(--bg-3);
+    }
+
+    .form-success.visible { display: block; }
+
+    .form-success-icon { font-size: 32px; margin-bottom: 16px; color: var(--gold); }
+
+    .form-success h3 {
+      font-family: var(--font-ser);
+      font-size: 28px;
+      font-weight: 300;
+      color: var(--cream);
+      margin-bottom: 12px;
+    }
+
+    .form-success p { font-size: 14px; color: var(--muted); }
+
+    /* ─── FOOTER ────────────────────────────────────────────────── */
+    footer {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 52px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .footer-logo {
+      font-family: var(--font-ser);
+      font-size: 20px;
+      font-weight: 400;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--cream);
+      text-decoration: none;
+    }
+
+    .footer-logo span { color: var(--gold); }
+
+    .footer-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover { color: var(--gold); }
+
+    .footer-copy {
+      font-size: 11px;
+      color: rgba(136,136,136,0.4);
+      letter-spacing: 0.08em;
+    }
+
+    /* ─── RESPONSIVE ────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      nav { padding: 0 24px; }
+      .nav-links { display: none; }
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 72px; left: 0; right: 0;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+        padding: 24px;
+        gap: 20px;
+        align-items: flex-start;
+      }
+      .nav-links.open a { font-size: 14px; }
+      .nav-burger { display: flex; }
+      .hero { padding: 100px 24px 80px; }
+      section { padding: 80px 24px; }
+      .about-section { padding: 80px 24px; }
+      .contact-section { padding: 80px 24px; }
+      .about-inner { grid-template-columns: 1fr; gap: 48px; }
+      .about-visual { display: none; }
+      .bowl-grid { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      footer { padding: 40px 24px; flex-direction: column; align-items: flex-start; gap: 20px; }
+      .brand-bar { padding: 20px 24px; gap: 24px; }
+    }
+
+    @media (max-width: 560px) {
+      .product-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ─── ANIMATIONS ────────────────────────────────────────────── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .fade-up:nth-child(2) { transition-delay: 0.1s; }
+    .fade-up:nth-child(3) { transition-delay: 0.2s; }
+    .fade-up:nth-child(4) { transition-delay: 0.3s; }
+    .fade-up:nth-child(5) { transition-delay: 0.4s; }
+    .fade-up:nth-child(6) { transition-delay: 0.5s; }
+    .fade-up:nth-child(7) { transition-delay: 0.1s; }
+    .fade-up:nth-child(8) { transition-delay: 0.2s; }
+    .fade-up:nth-child(9) { transition-delay: 0.3s; }
+  </style>
+</head>
+
+<body>
+
+  <!-- ─── NAVIGATION ──────────────────────────────────────────── -->
+  <nav>
+    <a href="#" class="nav-logo">Vir<span>id</span>is</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#skleniky">Skleníky</a></li>
+      <li><a href="#misy">Mísy</a></li>
+      <li><a href="#o-znacce">O značce</a></li>
+      <li><a href="#kontakt" class="nav-cta">Kontakt</a></li>
+    </ul>
+    <div class="nav-burger" id="navBurger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ─────────────────────────────────────────────────── -->
+  <section class="hero" id="top">
+    <div class="hero-bg"></div>
+    <div class="hero-line"></div>
+    <div class="hero-content">
+      <span class="hero-eyebrow">Česká ruční výroba · Ohýbané sklo</span>
+      <h1 class="hero-title">
+        Skleníky<br /><em>ze skla a světla</em>
+      </h1>
+      <p class="hero-sub">
+        Každý kus vzniká ručně v České republice z&nbsp;4mm low-iron float skla a&nbsp;ocelového rámu v&nbsp;RAL&nbsp;9005 matná černá.
+      </p>
+      <div class="hero-actions">
+        <a href="#skleniky" class="btn-primary">Prohlédnout kolekci</a>
+        <a href="#kontakt" class="btn-ghost">Nezávazná poptávka</a>
+      </div>
+    </div>
+    <div class="hero-scroll">Scroll</div>
+  </section>
+
+  <!-- ─── BRAND BAR ─────────────────────────────────────────────── -->
+  <div class="brand-bar">
+    <div class="brand-bar-item"><span class="dot"></span>Czech Made</div>
+    <div class="brand-bar-item"><span class="dot"></span>4 mm Low-Iron Float Sklo</div>
+    <div class="brand-bar-item"><span class="dot"></span>Ocel RAL 9005 Matná Černá</div>
+    <div class="brand-bar-item"><span class="dot"></span>Zakázkové Rozměry</div>
+    <div class="brand-bar-item"><span class="dot"></span>Doprava EU</div>
+  </div>
+
+  <!-- ─── SEKCE 1 — SKLENÍKY ────────────────────────────────────── -->
+  <section class="products-section" id="skleniky">
+    <div class="section-header">
+      <span class="section-label">Kolekce 01</span>
+      <h2 class="section-title">Skleníky<br /><em>z ohýbaného skla</em></h2>
+      <div class="section-rule"></div>
+    </div>
+
+    <div class="product-grid">
+
+      <!-- Model 01 -->
+      <article class="product-card fade-up">
+        <div class="product-img">
+          <img src="sklenik2.jpg" alt="VIRIDIS Table S" onerror="this.parentElement.innerHTML=placeholderHTML('sklenik2.jpg')" />
+        </div>
+        <div class="product-overlay"></div>
+        <div class="product-info">
+          <p class="product-model">Model 01</p>
+          <h3 class="product-name">Table S</h3>
+          <p class="product-dims">400 × 250 × 250 mm</p>
+          <p class="product-desc">Nejmenší model řady, ideální pro sukulenty a mech. Skvělý dárkový předmět.</p>
+          <div class="product-tags">
+            <span class="tag">Sedlová střecha</span>
+            <span class="tag">Rovné sklo</span>
+            <span class="tag">Přední panel</span>
+          </div>
+        </div>
+        <div class="card-arrow">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14L14 2M14 2H5M14 2V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </article>
+
+      <!-- Model 02 -->
+      <article class="product-card fade-up">
+        <div class="product-img">
+          <img src="sklenik.jpg" alt="VIRIDIS Table M" onerror="this.parentElement.innerHTML=placeholderHTML('sklenik.jpg')" />
+        </div>
+        <div class="product-overlay"></div>
+        <div class="product-info">
+          <p class="product-model">Model 02</p>
+          <h3 class="product-name">Table M</h3>
+          <p class="product-dims">800 × 400 × 380 mm</p>
+          <p class="product-desc">Hlavní model řady s obloukem z ohýbaného skla. Ideální pro kapradiny a tropické rostliny.</p>
+          <div class="product-tags">
+            <span class="tag">1× Oblouk</span>
+            <span class="tag">Ohýbané sklo</span>
+            <span class="tag">2× Panty</span>
+          </div>
+        </div>
+        <div class="card-arrow">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14L14 2M14 2H5M14 2V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </article>
+
+      <!-- Model 03 -->
+      <article class="product-card fade-up">
+        <div class="product-img">
+          <img src="sklenik4.jpg" alt="VIRIDIS Table L" onerror="this.parentElement.innerHTML=placeholderHTML('sklenik4.jpg')" />
+        </div>
+        <div class="product-overlay"></div>
+        <div class="product-info">
+          <p class="product-model">Model 03</p>
+          <h3 class="product-name">Table L</h3>
+          <p class="product-dims">1000 × 450 × 380 mm</p>
+          <p class="product-desc">Dvojitý oblouk, dominantní kus pro jídelní stůl nebo recepci. Nelze letecky dopravit z&nbsp;Číny.</p>
+          <div class="product-tags">
+            <span class="tag">2× Oblouk</span>
+            <span class="tag">2-sekční panel</span>
+          </div>
+        </div>
+        <div class="card-arrow">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14L14 2M14 2H5M14 2V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </article>
+
+      <!-- Model 04 -->
+      <article class="product-card fade-up">
+        <div class="product-img">
+          <img src="sklenik3.jpg" alt="VIRIDIS Table XL" onerror="this.parentElement.innerHTML=placeholderHTML('sklenik3.jpg')" />
+        </div>
+        <div class="product-overlay"></div>
+        <div class="product-info">
+          <p class="product-model">Model 04</p>
+          <h3 class="product-name">Table XL</h3>
+          <p class="product-dims">1200 × 450 × 400 mm</p>
+          <p class="product-desc">Největší stolní model pro hotely a kancelářské recepce.</p>
+          <div class="product-tags">
+            <span class="tag">2× Oblouk</span>
+            <span class="tag">Hotelové projekty</span>
+            <span class="tag">2-sekční panel</span>
+          </div>
+        </div>
+        <div class="card-arrow">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14L14 2M14 2H5M14 2V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </article>
+
+      <!-- Model 05 -->
+      <article class="product-card fade-up">
+        <div class="product-img">
+          <img src="sklenik16.jpg" alt="VIRIDIS Cradle" onerror="this.parentElement.innerHTML=placeholderHTML('sklenik16.jpg')" />
+        </div>
+        <div class="product-overlay"></div>
+        <div class="product-info">
+          <p class="product-model">Model 05</p>
+          <h3 class="product-name">Cradle</h3>
+          <p class="product-dims">800 × 400 × 350 mm vč. nožiček</p>
+          <p class="product-desc">Oblouk dole, hairpin nožičky, otevřený vrch. Přístup k rostlinám shora.</p>
+          <div class="product-tags">
+            <span class="tag">Oblouk dole</span>
+            <span class="tag">Hairpin nožičky</span>
+            <span class="tag">Otevřený vrch</span>
+          </div>
+        </div>
+        <div class="card-arrow">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14L14 2M14 2H5M14 2V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </article>
+
+      <!-- Model 06 -->
+      <article class="product-card fade-up">
+        <div class="product-img">
+          <img src="sklenik17.jpg" alt="VIRIDIS Cradle XL" onerror="this.parentElement.innerHTML=placeholderHTML('sklenik17.jpg')" />
+        </div>
+        <div class="product-overlay"></div>
+        <div class="product-info">
+          <p class="product-model">Model 06</p>
+          <h3 class="product-name">Cradle XL</h3>
+          <p class="product-dims">1400 × 400 × 350 mm vč. nožiček</p>
+          <p class="product-desc">Prodloužená Cradle, dominantní středový kus pro velký stůl.</p>
+          <div class="product-tags">
+            <span class="tag">6× Hairpin</span>
+            <span class="tag">Centerpiece</span>
+          </div>
+        </div>
+        <div class="card-arrow">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14L14 2M14 2H5M14 2V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </article>
+
+      <!-- Model 07 -->
+      <article class="product-card fade-up">
+        <div class="product-img">
+          <img src="sklenik18.jpg" alt="VIRIDIS Monolith" onerror="this.parentElement.innerHTML=placeholderHTML('sklenik18.jpg')" />
+        </div>
+        <div class="product-overlay"></div>
+        <div class="product-info">
+          <p class="product-model">Model 07</p>
+          <h3 class="product-name">Monolith</h3>
+          <p class="product-dims">250 × 200 × 1600 mm</p>
+          <p class="product-desc">Vysoký úzký skleník jako živá socha. Stojí samostatně na podlaze. Unikátní formát.</p>
+          <div class="product-tags">
+            <span class="tag">Podlahový</span>
+            <span class="tag">Oblouk nahoře</span>
+            <span class="tag">Unikátní</span>
+          </div>
+        </div>
+        <div class="card-arrow">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14L14 2M14 2H5M14 2V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </article>
+
+      <!-- Model 08 -->
+      <article class="product-card fade-up">
+        <div class="product-img">
+          <img src="sklenik20.jpg" alt="VIRIDIS Prism" onerror="this.parentElement.innerHTML=placeholderHTML('sklenik20.jpg')" />
+        </div>
+        <div class="product-overlay"></div>
+        <div class="product-info">
+          <p class="product-model">Model 08</p>
+          <h3 class="product-name">Prism</h3>
+          <p class="product-dims">700 × 400 × 350 mm</p>
+          <p class="product-desc">Geometrický tvar, střecha jako stan nebo list.</p>
+          <div class="product-tags">
+            <span class="tag">Trojúhelníkový průřez</span>
+            <span class="tag">Ohýbaná střecha</span>
+          </div>
+        </div>
+        <div class="card-arrow">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14L14 2M14 2H5M14 2V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </article>
+
+      <!-- Model 09 -->
+      <article class="product-card fade-up">
+        <div class="product-img">
+          <img src="wave.png" alt="VIRIDIS Wave" onerror="this.parentElement.innerHTML=placeholderHTML('wave.png')" />
+        </div>
+        <div class="product-overlay"></div>
+        <div class="product-info">
+          <p class="product-model">Model 09</p>
+          <h3 class="product-name">Wave</h3>
+          <p class="product-dims">900 × 400 mm · výška 150–450 mm</p>
+          <p class="product-desc">Tvar rozbíjející se vlny — levá strana vysoká, pravá nízká. Přirozená kompozice zahrady.</p>
+          <div class="product-tags">
+            <span class="tag">Asymetrický ohyb</span>
+            <span class="tag">Otevřený vrch</span>
+          </div>
+        </div>
+        <div class="card-arrow">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14L14 2M14 2H5M14 2V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ─── SEKCE 2 — MÍSY ────────────────────────────────────────── -->
+  <section class="bowls-section" id="misy">
+    <div class="section-header">
+      <span class="section-label">Kolekce 02</span>
+      <h2 class="section-title">Mísy<br /><em>z lehaného skla</em></h2>
+      <div class="section-rule"></div>
+    </div>
+
+    <div class="bowl-grid">
+
+      <!-- Model 10 -->
+      <article class="product-card fade-up">
+        <div class="product-img">
+          <img src="misa4.jpg" alt="VIRIDIS Bowl" onerror="this.parentElement.innerHTML=placeholderHTML('misa4.jpg')" />
+        </div>
+        <div class="product-overlay"></div>
+        <div class="product-info">
+          <p class="product-model">Model 10</p>
+          <h3 class="product-name">Bowl</h3>
+          <p class="product-dims">∅ ~550 mm · výška ~150 mm vč. stojanu</p>
+          <p class="product-desc">Organický tvar, každý kus unikát, přirozeně zvlněné okraje. Pro sukulenty a mech.</p>
+          <div class="product-tags">
+            <span class="tag">Lehané sklo</span>
+            <span class="tag">Kruhový stojan</span>
+            <span class="tag">Každý kus unikát</span>
+          </div>
+        </div>
+        <div class="card-arrow">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14L14 2M14 2H5M14 2V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </article>
+
+      <!-- Model 11 -->
+      <article class="product-card fade-up">
+        <div class="product-img">
+          <img src="lake.png" alt="VIRIDIS Lake" onerror="this.parentElement.innerHTML=placeholderHTML('lake.png')" />
+        </div>
+        <div class="product-overlay"></div>
+        <div class="product-info">
+          <p class="product-model">Model 11</p>
+          <h3 class="product-name">Lake</h3>
+          <p class="product-dims">∅ 600–700 mm</p>
+          <p class="product-desc">Propad uprostřed jako jezero, okraje ploché. Leží přímo na stole bez stojanu.</p>
+          <div class="product-tags">
+            <span class="tag">Lehané sklo</span>
+            <span class="tag">Bez stojanu</span>
+            <span class="tag">Každý kus unikát</span>
+          </div>
+        </div>
+        <div class="card-arrow">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14L14 2M14 2H5M14 2V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ─── O ZNAČCE ──────────────────────────────────────────────── -->
+  <section class="about-section" id="o-znacce">
+    <div class="about-inner">
+      <div class="about-text">
+        <span class="section-label">O značce VIRIDIS</span>
+        <h2 class="about-heading">Řemeslo,<br /><em>které přetrvá</em></h2>
+        <p class="about-body">
+          VIRIDIS vznikla z vize propojit tradici českého sklářství s&nbsp;moderním minimalistickým designem. Každý skleník je výsledkem precizní ruční práce — od ohýbání skla přes ocelové rámy až po konečnou montáž.
+        </p>
+        <p class="about-body">
+          Používáme výhradně 4mm low-iron float sklo s&nbsp;vysokou propustností světla, ideální pro citlivé rostliny. Ocelový rám je lakovaný práškovou barvou RAL&nbsp;9005 matná černá, která odolá vlhkosti a&nbsp;času.
+        </p>
+        <div class="about-specs">
+          <div class="spec-item">
+            <p class="spec-label">Sklo</p>
+            <p class="spec-value">4 mm Low-Iron Float</p>
+          </div>
+          <div class="spec-item">
+            <p class="spec-label">Rám</p>
+            <p class="spec-value">Ocel RAL 9005 matná černá</p>
+          </div>
+          <div class="spec-item">
+            <p class="spec-label">Výroba</p>
+            <p class="spec-value">Česká republika</p>
+          </div>
+          <div class="spec-item">
+            <p class="spec-label">Doprava</p>
+            <p class="spec-value">Celá EU</p>
+          </div>
+          <div class="spec-item" style="grid-column: 1/-1;">
+            <p class="spec-label">Zakázkové rozměry</p>
+            <p class="spec-value">Na vyžádání — kontaktujte nás pro individuální nabídku</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-visual">
+        <div class="about-img-wrap">
+          <img src="sklenik.jpg" alt="VIRIDIS výroba" onerror="this.style.display='none'" />
+        </div>
+        <div class="about-badge">
+          <span class="about-badge-text">Czech<br/>Made</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── KONTAKT ───────────────────────────────────────────────── -->
+  <section class="contact-section" id="kontakt">
+    <div class="section-header">
+      <span class="section-label">Poptávka</span>
+      <h2 class="section-title">Nezávazná<br /><em>poptávka</em></h2>
+      <div class="section-rule"></div>
+    </div>
+
+    <div class="contact-inner">
+      <div class="form-success" id="formSuccess">
+        <div class="form-success-icon">✦</div>
+        <h3>Zpráva odeslána</h3>
+        <p>Ozveme se vám do 2 pracovních dnů na váš e-mail.</p>
+      </div>
+
+      <form id="contactForm" novalidate>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="name">Jméno a příjmení *</label>
+            <input type="text" id="name" name="name" placeholder="Jan Novák" required />
+          </div>
+          <div class="form-group">
+            <label for="email">E-mail *</label>
+            <input type="email" id="email" name="email" placeholder="jan@novak.cz" required />
+          </div>
+          <div class="form-group">
+            <label for="phone">Telefon</label>
+            <input type="tel" id="phone" name="phone" placeholder="+420 600 000 000" />
+          </div>
+          <div class="form-group">
+            <label for="model">Model</label>
+            <select id="model" name="model">
+              <option value="" disabled selected>Vyberte model…</option>
+              <option value="01">Model 01 — Table S</option>
+              <option value="02">Model 02 — Table M</option>
+              <option value="03">Model 03 — Table L</option>
+              <option value="04">Model 04 — Table XL</option>
+              <option value="05">Model 05 — Cradle</option>
+              <option value="06">Model 06 — Cradle XL</option>
+              <option value="07">Model 07 — Monolith</option>
+              <option value="08">Model 08 — Prism</option>
+              <option value="09">Model 09 — Wave</option>
+              <option value="10">Model 10 — Bowl</option>
+              <option value="11">Model 11 — Lake</option>
+              <option value="custom">Zakázkový rozměr</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label for="message">Zpráva *</label>
+            <textarea id="message" name="message" placeholder="Popis projektu, počet kusů, zakázkové rozměry…" required></textarea>
+          </div>
+        </div>
+
+        <p class="form-note">
+          Všechny ceny jsou na vyžádání. Odpovídáme do 2 pracovních dnů.
+          Zakázkové rozměry rádi zpracujeme na základě vašich podkladů.
+        </p>
+
+        <div class="form-submit">
+          <button type="submit" class="btn-submit">Odeslat poptávku</button>
+          <a href="mailto:info@viridis.cz" class="form-email-link">info@viridis.cz</a>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ────────────────────────────────────────────────── -->
+  <footer>
+    <a href="#top" class="footer-logo">Vir<span>id</span>is</a>
+    <ul class="footer-links">
+      <li><a href="#skleniky">Skleníky</a></li>
+      <li><a href="#misy">Mísy</a></li>
+      <li><a href="#o-znacce">O značce</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
+      <li><a href="mailto:info@viridis.cz">info@viridis.cz</a></li>
+    </ul>
+    <p class="footer-copy">© 2025 VIRIDIS · viridis.cz · Czech Made</p>
+  </footer>
+
+  <!-- ─── SCRIPTS ───────────────────────────────────────────────── -->
+  <script>
+    // Image placeholder fallback
+    function placeholderHTML(filename) {
+      return `<div class="img-placeholder">
+        <svg class="img-placeholder-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="40" height="40" rx="2" stroke="#c9a96e" stroke-width="1.5"/>
+          <path d="M4 32l10-10 8 8 8-10 14 14" stroke="#c9a96e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="16" cy="18" r="3" stroke="#c9a96e" stroke-width="1.5"/>
+        </svg>
+        <span class="img-placeholder-name">${filename}</span>
+      </div>`;
+    }
+
+    // Apply placeholders to broken images
+    document.querySelectorAll('.product-img img').forEach(img => {
+      img.addEventListener('error', function() {
+        const src = this.getAttribute('src');
+        this.parentElement.innerHTML = placeholderHTML(src);
+      });
+    });
+
+    // Navbar burger
+    const burger = document.getElementById('navBurger');
+    const navLinks = document.getElementById('navLinks');
+    burger.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+
+    // Close nav on link click (mobile)
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => navLinks.classList.remove('open'));
+    });
+
+    // Scroll animation
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // Contact form
+    const form = document.getElementById('contactForm');
+    const success = document.getElementById('formSuccess');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const name = form.querySelector('#name').value.trim();
+      const email = form.querySelector('#email').value.trim();
+      const message = form.querySelector('#message').value.trim();
+
+      if (!name || !email || !message) {
+        const firstEmpty = !name ? '#name' : !email ? '#email' : '#message';
+        form.querySelector(firstEmpty).focus();
+        form.querySelector(firstEmpty).style.borderColor = 'rgba(201,169,110,0.7)';
+        return;
+      }
+
+      // Simulate submission
+      const btn = form.querySelector('.btn-submit');
+      btn.textContent = 'Odesílám…';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        form.style.display = 'none';
+        success.classList.add('visible');
+      }, 800);
+    });
+
+    // Reset input highlight on change
+    form.querySelectorAll('input, textarea').forEach(el => {
+      el.addEventListener('input', () => {
+        el.style.borderColor = '';
+      });
+    });
+  </script>
+</body>
+</html>
