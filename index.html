@@ -12,14 +12,14 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #0e0e0e;
-      --bg-2:      #141414;
-      --bg-3:      #1a1a1a;
-      --gold:      #c9a96e;
-      --gold-dim:  #8a6f3f;
-      --cream:     #f0ebe2;
-      --muted:     #888;
-      --border:    rgba(201, 169, 110, 0.18);
+      --bg:        #faf8f4;
+      --bg-2:      #f3efe8;
+      --bg-3:      #ece7dd;
+      --gold:      #a07828;
+      --gold-dim:  #c9a96e;
+      --cream:     #2c2520;
+      --muted:     #6b6258;
+      --border:    rgba(160, 120, 40, 0.20);
       --font-ser:  'Cormorant Garamond', Georgia, serif;
       --font-san:  'Inter', system-ui, sans-serif;
       --ease:      cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -41,8 +41,8 @@
 
     /* ─── SCROLLBAR ─────────────────────────────────────────────── */
     ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+    ::-webkit-scrollbar-track { background: var(--bg-2); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
 
     /* ─── NAV ───────────────────────────────────────────────────── */
     nav {
@@ -54,7 +54,7 @@
       justify-content: space-between;
       padding: 0 48px;
       height: 72px;
-      background: rgba(14,14,14,0.85);
+      background: rgba(250,248,244,0.90);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
@@ -126,8 +126,8 @@
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,169,110,0.07) 0%, transparent 70%),
-        radial-gradient(ellipse 60% 80% at 80% 100%, rgba(201,169,110,0.04) 0%, transparent 60%);
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(160,120,40,0.10) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 80% at 80% 100%, rgba(160,120,40,0.06) 0%, transparent 60%);
     }
 
     .hero-line {
@@ -341,7 +341,7 @@
     .product-img {
       aspect-ratio: 4/3;
       overflow: hidden;
-      background: #1c1c1c;
+      background: #e5dfd5;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -381,7 +381,7 @@
     .product-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(14,14,14,0.3);
+      background: rgba(250,248,244,0.3);
       opacity: 0;
       transition: opacity 0.4s var(--ease);
     }
@@ -622,7 +622,7 @@
 
     input:focus, select:focus, textarea:focus {
       border-color: var(--gold-dim);
-      background: rgba(201,169,110,0.03);
+      background: rgba(160,120,40,0.04);
     }
 
     select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a6f3f' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 18px center; padding-right: 44px; }
