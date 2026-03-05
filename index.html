@@ -1350,6 +1350,28 @@
     <p class="footer-copy">© 2025 VIRIDIS · viridis.cz · Czech Made</p>
   </footer>
 
+  <!-- Product detail modal -->
+  <div class="modal-backdrop" id="productModal">
+    <div class="modal-inner">
+      <button class="modal-close" id="modalClose" aria-label="Zavřít">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 3l14 14M17 3L3 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <div class="modal">
+        <div class="modal-img" id="modalImg"></div>
+        <div class="modal-body">
+          <p class="modal-model" id="modalModel"></p>
+          <h2 class="modal-name" id="modalName"></h2>
+          <p class="modal-dims" id="modalDims"></p>
+          <p class="modal-desc" id="modalDesc"></p>
+          <div class="modal-tags" id="modalTags"></div>
+          <div class="modal-actions">
+            <a href="#kontakt" class="btn-primary" onclick="closeModal()">Mám zájem</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ─── SCRIPTS ───────────────────────────────────────────────── -->
   <script>
     // Image placeholder fallback
@@ -1484,27 +1506,5 @@
     });
 
   </script>
-
-  <!-- Product detail modal -->
-  <div class="modal-backdrop" id="productModal">
-    <div class="modal-inner">
-      <button class="modal-close" id="modalClose" aria-label="Zavřít">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 3l14 14M17 3L3 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      </button>
-      <div class="modal">
-        <div class="modal-img" id="modalImg"></div>
-        <div class="modal-body">
-          <p class="modal-model" id="modalModel"></p>
-          <h2 class="modal-name" id="modalName"></h2>
-          <p class="modal-dims" id="modalDims"></p>
-          <p class="modal-desc" id="modalDesc"></p>
-          <div class="modal-tags" id="modalTags"></div>
-          <div class="modal-actions">
-            <a href="#kontakt" class="btn-primary" onclick="closeModal()">Mám zájem</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </body>
 </html>
