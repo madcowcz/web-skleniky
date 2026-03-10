@@ -31,6 +31,14 @@
   "url": "https://www.sklarnaleopold.cz",
   "telephone": "+420777716326",
   "email": "info@sklarnaleopold.cz",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Na Brněnce 1565/30",
+    "addressLocality": "Ivančice",
+    "postalCode": "664 91",
+    "addressRegion": "Jihomoravský kraj",
+    "addressCountry": "CZ"
+  },
   "areaServed": "CZ",
   "priceRange": "$$",
   "openingHours": "Mo-Fr 08:00-16:00",
@@ -162,6 +170,7 @@ nav ul a:hover{color:var(--gold2)}
 /* ── CONTACT ── */
 #kontakt{padding:80px 5%}
 .contact-layout{display:grid;grid-template-columns:1fr 1.4fr;gap:4rem;max-width:1060px;margin:0 auto;align-items:start}
+.contact-map{max-width:1060px;margin:2.5rem auto 0}
 .contact-info h2{font-family:'Playfair Display',serif;font-size:1.85rem;color:var(--navy);margin-bottom:.85rem}
 .contact-info p{color:var(--grey);font-weight:300;line-height:1.75;margin-bottom:2rem}
 .cdetail{display:flex;gap:.85rem;align-items:flex-start;margin-bottom:1.2rem}
@@ -629,6 +638,8 @@ footer{background:var(--navy);border-top:1px solid var(--border);padding:2.8rem 
       <div class="cdetail"><div class="cdetail-icon">📞</div><div><strong>Telefon</strong><a href="tel:777716326">777 716 326</a></div></div>
       <div class="cdetail"><div class="cdetail-icon">✉️</div><div><strong>E-mail</strong><a href="mailto:info@sklarnaleopold.cz">info@sklarnaleopold.cz</a></div></div>
       <div class="cdetail"><div class="cdetail-icon">⏰</div><div><strong>Pracovní doba</strong><span>Po–Pá: 8:00–16:00</span></div></div>
+      <div class="cdetail"><div class="cdetail-icon">📍</div><div><strong>Adresa provozovny</strong><span>Areál ADW, Na Brněnce 1565/30<br>664 91 Ivančice, Brno-venkov</span></div></div>
+      <div class="cdetail"><div class="cdetail-icon">🧾</div><div><strong>Fakturační údaje</strong><span>Sklo Leopold s.r.o.<br>IČ: 21989184</span></div></div>
     </div>
     <div class="fcard reveal">
       <h3>Poptávkový formulář</h3>
@@ -660,6 +671,13 @@ footer{background:var(--navy);border-top:1px solid var(--border);padding:2.8rem 
         <p style="color:var(--grey);font-size:.86rem">Ozveme se do 24 hodin v pracovní dny.</p>
       </div>
     </div>
+  </div>
+  <div class="contact-map reveal">
+    <iframe
+      src="https://maps.google.com/maps?q=Na+Brn%C4%9Bnce+1565%2F30%2C+664+91+Ivan%C4%8Dice&output=embed&hl=cs&z=15"
+      width="100%" height="320" style="border:0;border-radius:8px;display:block"
+      loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"
+      title="Mapa – Sklo Leopold, Ivančice"></iframe>
   </div>
 </section>
 
@@ -716,6 +734,7 @@ footer{background:var(--navy);border-top:1px solid var(--border);padding:2.8rem 
       <li><a href="tel:777716326">777 716 326</a></li>
       <li><a href="mailto:info@sklarnaleopold.cz">info@sklarnaleopold.cz</a></li>
       <li><a href="#kontakt">Poptávkový formulář</a></li>
+      <li style="margin-top:.8rem;color:var(--grey);font-size:.83rem;line-height:1.6">Areál ADW, Na Brněnce 1565/30<br>664 91 Ivančice<br>IČ: 21989184</li>
     </ul></div>
   </div>
   <div class="footer-bottom">
