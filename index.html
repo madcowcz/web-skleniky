@@ -1,2211 +1,795 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VIRIDIS — České skleníky z ohýbaného skla</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
-  <style>
-    /* ─── RESET & BASE ─────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg:        #faf8f4;
-      --bg-2:      #f3efe8;
-      --bg-3:      #ece7dd;
-      --gold:      #a07828;
-      --gold-dim:  #c9a96e;
-      --cream:     #2c2520;
-      --muted:     #6b6258;
-      --border:    rgba(160, 120, 40, 0.20);
-      --font-ser:  'Cormorant Garamond', Georgia, serif;
-      --font-san:  'Inter', system-ui, sans-serif;
-      --ease:      cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--cream);
-      font-family: var(--font-san);
-      font-size: 15px;
-      line-height: 1.7;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-    }
-
-    ::selection { background: var(--gold); color: var(--bg); }
-
-    /* ─── SCROLLBAR ─────────────────────────────────────────────── */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: var(--bg-2); }
-    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
-
-    /* ─── NAV ───────────────────────────────────────────────────── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 48px;
-      height: 72px;
-      background: rgba(250,248,244,0.90);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-      transition: background 0.4s var(--ease);
-    }
-
-    .nav-logo {
-      font-family: var(--font-ser);
-      font-size: 22px;
-      font-weight: 400;
-      letter-spacing: 0.25em;
-      color: var(--cream);
-      text-decoration: none;
-      text-transform: uppercase;
-    }
-
-    .nav-logo span { color: var(--gold); }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 36px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-size: 12px;
-      font-weight: 400;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-
-    .nav-links a:hover { color: var(--gold); }
-
-    .nav-cta {
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--bg) !important;
-      background: var(--gold);
-      padding: 10px 22px;
-      border-radius: 2px;
-      transition: background 0.3s, opacity 0.3s !important;
-    }
-
-    .nav-cta:hover { background: var(--gold); opacity: 0.85; color: var(--bg) !important; }
-
-    /* hamburger */
-    .nav-burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
-    .nav-burger span { display: block; width: 24px; height: 1px; background: var(--cream); transition: all 0.3s; }
-
-    /* ─── HERO ──────────────────────────────────────────────────── */
-    .hero {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 120px 24px 140px;
-      overflow: hidden;
-    }
-
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(160,120,40,0.10) 0%, transparent 70%),
-        radial-gradient(ellipse 60% 80% at 80% 100%, rgba(160,120,40,0.06) 0%, transparent 60%);
-    }
-
-    .hero-line {
-      position: absolute;
-      top: 0; left: 50%;
-      transform: translateX(-50%);
-      width: 1px;
-      height: 72px;
-      background: linear-gradient(to bottom, transparent, var(--gold));
-    }
-
-    .hero-content { position: relative; max-width: 820px; }
-
-    .hero-eyebrow {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 400;
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 28px;
-    }
-
-    .hero-title {
-      font-family: var(--font-ser);
-      font-size: clamp(52px, 8vw, 100px);
-      font-weight: 300;
-      line-height: 1.0;
-      letter-spacing: -0.01em;
-      color: var(--cream);
-      margin-bottom: 32px;
-    }
-
-    .hero-title em {
-      font-style: italic;
-      color: var(--gold);
-    }
-
-    .hero-sub {
-      font-size: 15px;
-      font-weight: 300;
-      color: var(--muted);
-      letter-spacing: 0.04em;
-      max-width: 480px;
-      margin: 0 auto 52px;
-      line-height: 1.8;
-    }
-
-    .hero-actions {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .btn-primary {
-      display: inline-block;
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      text-decoration: none;
-      color: var(--bg);
-      background: var(--gold);
-      padding: 16px 40px;
-      border-radius: 2px;
-      transition: opacity 0.3s;
-    }
-
-    .btn-primary:hover { opacity: 0.85; }
-
-    .btn-ghost {
-      display: inline-block;
-      font-size: 12px;
-      font-weight: 400;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      text-decoration: none;
-      color: var(--cream);
-      border: 1px solid var(--border);
-      padding: 15px 40px;
-      border-radius: 2px;
-      transition: border-color 0.3s, color 0.3s;
-    }
-
-    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
-
-    .hero-scroll {
-      position: absolute;
-      bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      font-size: 10px;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .hero-scroll::after {
-      content: '';
-      display: block;
-      width: 1px;
-      height: 48px;
-      background: linear-gradient(to bottom, var(--gold-dim), transparent);
-      animation: scrollLine 2s ease-in-out infinite;
-    }
-
-    @keyframes scrollLine {
-      0%, 100% { opacity: 0.4; transform: scaleY(1); transform-origin: top; }
-      50% { opacity: 1; }
-    }
-
-    /* ─── BRAND BAR ─────────────────────────────────────────────── */
-    .brand-bar {
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 22px 48px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 48px;
-      flex-wrap: wrap;
-      background: var(--bg-2);
-    }
-
-    .brand-bar-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .brand-bar-item .dot {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: var(--gold);
-      flex-shrink: 0;
-    }
-
-    /* ─── SECTION WRAPPER ───────────────────────────────────────── */
-    section { padding: 120px 48px; }
-
-    .section-header {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      margin-bottom: 80px;
-    }
-
-    .section-label {
-      font-size: 11px;
-      font-weight: 400;
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 16px;
-    }
-
-    .section-title {
-      font-family: var(--font-ser);
-      font-size: clamp(36px, 5vw, 60px);
-      font-weight: 300;
-      line-height: 1.1;
-      color: var(--cream);
-      max-width: 600px;
-    }
-
-    .section-title em { font-style: italic; color: var(--gold); }
-
-    .section-rule {
-      width: 48px;
-      height: 1px;
-      background: var(--gold);
-      margin: 28px auto 0;
-    }
-
-    /* ─── PRODUCT GRID ──────────────────────────────────────────── */
-    .products-section { background: var(--bg); }
-    .bowls-section { background: var(--bg-2); }
-
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 2px;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .product-card {
-      position: relative;
-      background: var(--bg-3);
-      overflow: hidden;
-      cursor: pointer;
-      group: true;
-    }
-
-    .product-card:hover .product-img img { transform: scale(1.04); }
-    .product-card:hover .product-overlay { opacity: 1; }
-    .product-card:hover .card-arrow { transform: translate(4px, -4px); }
-
-    .product-img {
-      aspect-ratio: 4/3;
-      overflow: hidden;
-      background: #e5dfd5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .product-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.7s var(--ease);
-      display: block;
-    }
-
-    .img-placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 100%;
-      gap: 12px;
-    }
-
-    .img-placeholder-icon {
-      width: 48px;
-      height: 48px;
-      opacity: 0.15;
-    }
-
-    .img-placeholder-name {
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      opacity: 0.5;
-    }
-
-    .product-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(250,248,244,0.3);
-      opacity: 0;
-      transition: opacity 0.4s var(--ease);
-      pointer-events: none;
-    }
-
-    .product-info {
-      padding: 28px 28px 32px;
-      border-top: 1px solid var(--border);
-    }
-
-    .product-model {
-      font-size: 10px;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 8px;
-    }
-
-    .product-name {
-      font-family: var(--font-ser);
-      font-size: 26px;
-      font-weight: 300;
-      color: var(--cream);
-      margin-bottom: 6px;
-      line-height: 1.2;
-    }
-
-    .product-dims {
-      font-size: 12px;
-      color: var(--muted);
-      letter-spacing: 0.08em;
-      margin-bottom: 16px;
-    }
-
-    .product-desc {
-      font-size: 13px;
-      font-weight: 300;
-      color: rgba(240,235,226,0.65);
-      line-height: 1.75;
-      margin-bottom: 20px;
-    }
-
-    .product-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .tag {
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--gold-dim);
-      border: 1px solid rgba(138,111,63,0.35);
-      padding: 4px 10px;
-      border-radius: 1px;
-    }
-
-    .card-arrow {
-      position: absolute;
-      top: 24px;
-      right: 24px;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.3s var(--ease);
-      color: var(--gold);
-    }
-
-    /* ─── BOWL GRID (larger cards) ──────────────────────────────── */
-    .bowl-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
-      gap: 2px;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-
-    /* ─── ABOUT STRIP ───────────────────────────────────────────── */
-    .about-section {
-      background: var(--bg);
-      padding: 120px 48px;
-      border-top: 1px solid var(--border);
-    }
-
-    .about-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
-    }
-
-    .about-text .section-label { text-align: left; margin-bottom: 20px; }
-
-    .about-heading {
-      font-family: var(--font-ser);
-      font-size: clamp(36px, 4vw, 52px);
-      font-weight: 300;
-      line-height: 1.15;
-      color: var(--cream);
-      margin-bottom: 28px;
-    }
-
-    .about-heading em { font-style: italic; color: var(--gold); }
-
-    .about-body {
-      font-size: 14px;
-      font-weight: 300;
-      color: rgba(240,235,226,0.65);
-      line-height: 1.9;
-      margin-bottom: 32px;
-    }
-
-    .about-specs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-    }
-
-    .spec-item {
-      background: var(--bg-2);
-      padding: 20px 22px;
-    }
-
-    .spec-label {
-      font-size: 10px;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 6px;
-    }
-
-    .spec-value {
-      font-size: 13px;
-      font-weight: 300;
-      color: var(--cream);
-    }
-
-    .about-visual {
-      position: relative;
-    }
-
-    .about-img-wrap {
-      aspect-ratio: 3/4;
-      background: var(--bg-3);
-      border: 1px solid var(--border);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .about-img-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .about-badge {
-      position: absolute;
-      bottom: -20px;
-      right: -20px;
-      width: 120px;
-      height: 120px;
-      background: var(--gold);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-    }
-
-    .about-badge-text {
-      font-family: var(--font-ser);
-      font-size: 13px;
-      font-weight: 400;
-      color: var(--bg);
-      text-align: center;
-      letter-spacing: 0.05em;
-      line-height: 1.3;
-    }
-
-    /* ─── CONTACT ───────────────────────────────────────────────── */
-    .contact-section {
-      background: var(--bg-2);
-      border-top: 1px solid var(--border);
-    }
-
-    .contact-inner {
-      max-width: 760px;
-      margin: 0 auto;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .form-group.full { grid-column: 1 / -1; }
-
-    label {
-      font-size: 10px;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--gold);
-    }
-
-    input, select, textarea {
-      background: var(--bg-3);
-      border: 1px solid var(--border);
-      border-radius: 2px;
-      color: var(--cream);
-      font-family: var(--font-san);
-      font-size: 14px;
-      font-weight: 300;
-      padding: 14px 18px;
-      outline: none;
-      transition: border-color 0.3s;
-      width: 100%;
-      appearance: none;
-      -webkit-appearance: none;
-    }
-
-    input::placeholder, textarea::placeholder { color: rgba(136,136,136,0.5); }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--gold-dim);
-      background: rgba(160,120,40,0.04);
-    }
-
-    select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a6f3f' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 18px center; padding-right: 44px; }
-
-    textarea { resize: vertical; min-height: 140px; }
-
-    .form-note {
-      font-size: 12px;
-      font-weight: 300;
-      color: var(--muted);
-      margin: 20px 0;
-      line-height: 1.7;
-    }
-
-    .form-submit {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-top: 8px;
-    }
-
-    .btn-submit {
-      font-family: var(--font-san);
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--bg);
-      background: var(--gold);
-      border: none;
-      padding: 16px 44px;
-      border-radius: 2px;
-      cursor: pointer;
-      transition: opacity 0.3s;
-    }
-
-    .btn-submit:hover { opacity: 0.85; }
-
-    .form-email-link {
-      font-size: 13px;
-      font-weight: 300;
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-
-    .form-email-link:hover { color: var(--gold); }
-
-    .form-success {
-      display: none;
-      text-align: center;
-      padding: 60px 40px;
-      border: 1px solid var(--border);
-      background: var(--bg-3);
-    }
-
-    .form-success.visible { display: block; }
-
-    .form-success-icon { font-size: 32px; margin-bottom: 16px; color: var(--gold); }
-
-    .form-success h3 {
-      font-family: var(--font-ser);
-      font-size: 28px;
-      font-weight: 300;
-      color: var(--cream);
-      margin-bottom: 12px;
-    }
-
-    .form-success p { font-size: 14px; color: var(--muted); }
-
-    /* ─── FOOTER ────────────────────────────────────────────────── */
-    footer {
-      background: var(--bg);
-      border-top: 1px solid var(--border);
-      padding: 52px 48px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 24px;
-    }
-
-    .footer-logo {
-      font-family: var(--font-ser);
-      font-size: 20px;
-      font-weight: 400;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--cream);
-      text-decoration: none;
-    }
-
-    .footer-logo span { color: var(--gold); }
-
-    .footer-links {
-      display: flex;
-      gap: 32px;
-      list-style: none;
-      flex-wrap: wrap;
-    }
-
-    .footer-links a {
-      font-size: 11px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-
-    .footer-links a:hover { color: var(--gold); }
-
-    .footer-copy {
-      font-size: 11px;
-      color: rgba(136,136,136,0.4);
-      letter-spacing: 0.08em;
-    }
-
-    /* ─── RESPONSIVE ────────────────────────────────────────────── */
-    @media (max-width: 900px) {
-      nav { padding: 0 24px; }
-      .nav-links { display: none; }
-      .nav-links.open {
-        display: flex;
-        flex-direction: column;
-        position: fixed;
-        top: 72px; left: 0; right: 0;
-        background: var(--bg);
-        border-bottom: 1px solid var(--border);
-        padding: 24px;
-        gap: 20px;
-        align-items: flex-start;
-      }
-      .nav-links.open a { font-size: 14px; }
-      .nav-burger { display: flex; }
-      .hero { padding: 100px 24px 80px; }
-      section { padding: 80px 24px; }
-      .about-section { padding: 80px 24px; }
-      .contact-section { padding: 80px 24px; }
-      .about-inner { grid-template-columns: 1fr; gap: 48px; }
-      .about-visual { display: none; }
-      .bowl-grid { grid-template-columns: 1fr; }
-      .form-grid { grid-template-columns: 1fr; }
-      footer { padding: 40px 24px; flex-direction: column; align-items: flex-start; gap: 20px; }
-      .brand-bar { padding: 20px 24px; gap: 24px; }
-    }
-
-    @media (max-width: 560px) {
-      .product-grid { grid-template-columns: 1fr; }
-    }
-
-    /* ─── ANIMATIONS ────────────────────────────────────────────── */
-    .fade-up {
-      opacity: 0;
-      transform: translateY(32px);
-      transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
-    }
-
-    .fade-up.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .fade-up:nth-child(2) { transition-delay: 0.1s; }
-    .fade-up:nth-child(3) { transition-delay: 0.2s; }
-    .fade-up:nth-child(4) { transition-delay: 0.3s; }
-    .fade-up:nth-child(5) { transition-delay: 0.4s; }
-    .fade-up:nth-child(6) { transition-delay: 0.5s; }
-    .fade-up:nth-child(7) { transition-delay: 0.1s; }
-    .fade-up:nth-child(8) { transition-delay: 0.2s; }
-    .fade-up:nth-child(9) { transition-delay: 0.3s; }
-
-    .product-card a.card-link {
-      display: contents;
-      color: inherit;
-      text-decoration: none;
-    }
-
-    /* ─── KONFIGURÁTOR ───────────────────────────────────────────── */
-    .config-section {
-      background: var(--bg);
-      border-top: 1px solid var(--border);
-    }
-
-    .config-wrapper {
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    /* Step indicator */
-    .config-steps {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0;
-      margin-bottom: 56px;
-    }
-
-    .config-step {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .step-num {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-ser);
-      font-size: 15px;
-      color: var(--muted);
-      transition: all 0.3s var(--ease);
-    }
-
-    .config-step.active .step-num {
-      border-color: var(--gold);
-      color: var(--gold);
-      background: rgba(160,120,40,0.08);
-    }
-
-    .config-step.done .step-num {
-      background: var(--gold);
-      border-color: var(--gold);
-      color: var(--bg);
-    }
-
-    .step-label {
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      transition: color 0.3s var(--ease);
-    }
-
-    .config-step.active .step-label { color: var(--gold); }
-
-    .config-step-line {
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-      min-width: 60px;
-      margin-bottom: 24px;
-    }
-
-    /* Panels */
-    .config-panel { display: none; }
-    .config-panel.active { display: block; }
-
-    /* Step 1 — model grid */
-    .config-model-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 12px;
-      margin-bottom: 32px;
-    }
-
-    .config-model-card {
-      border: 1px solid var(--border);
-      border-radius: 2px;
-      padding: 16px 12px;
-      cursor: pointer;
-      transition: all 0.25s var(--ease);
-      text-align: center;
-      background: var(--bg);
-    }
-
-    .config-model-card:hover {
-      border-color: var(--gold-dim);
-      background: var(--bg-2);
-    }
-
-    .config-model-card.selected {
-      border-color: var(--gold);
-      background: rgba(160,120,40,0.06);
-    }
-
-    .config-model-card .cmc-num {
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 4px;
-    }
-
-    .config-model-card .cmc-name {
-      font-family: var(--font-ser);
-      font-size: 16px;
-      color: var(--cream);
-    }
-
-    .config-model-card .cmc-dims {
-      font-size: 10px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-
-    /* Step 2 — dims + SVG */
-    .config-dims-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
-      align-items: start;
-    }
-
-    .config-inputs h3 {
-      font-family: var(--font-ser);
-      font-size: 22px;
-      font-weight: 400;
-      color: var(--cream);
-      margin-bottom: 6px;
-    }
-
-    .config-inputs .config-selected-model {
-      font-size: 12px;
-      color: var(--muted);
-      letter-spacing: 0.08em;
-      margin-bottom: 28px;
-    }
-
-    .config-field {
-      margin-bottom: 20px;
-    }
-
-    .config-field label {
-      display: block;
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
-
-    .config-field input {
-      width: 100%;
-      background: var(--bg-2);
-      border: 1px solid var(--border);
-      border-radius: 2px;
-      padding: 10px 14px;
-      font-family: var(--font-san);
-      font-size: 15px;
-      color: var(--cream);
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .config-field input:focus {
-      border-color: var(--gold-dim);
-    }
-
-    .config-field .field-unit {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-
-    /* SVG preview */
-    .config-svg-wrap {
-      position: sticky;
-      top: 100px;
-    }
-
-    .config-svg-wrap svg {
-      width: 100%;
-      height: auto;
-    }
-
-    .config-svg-label {
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      text-align: center;
-      margin-top: 12px;
-    }
-
-    /* Step 3 — summary */
-    .config-summary-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 40px;
-    }
-
-    .config-summary-box {
-      border: 1px solid var(--border);
-      border-radius: 2px;
-      padding: 20px 18px;
-      background: var(--bg-2);
-    }
-
-    .csb-label {
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
-
-    .csb-value {
-      font-family: var(--font-ser);
-      font-size: 20px;
-      color: var(--cream);
-    }
-
-    .csb-unit {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    .config-summary-box.highlight {
-      border-color: var(--gold);
-      background: rgba(160,120,40,0.05);
-    }
-
-    .config-summary-box.highlight .csb-value { color: var(--gold); }
-
-    .config-inquiry-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      padding: 24px;
-      border: 1px solid var(--border);
-      border-radius: 2px;
-      background: var(--bg-2);
-    }
-
-    .config-inquiry-bar p {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .config-inquiry-bar strong {
-      display: block;
-      font-family: var(--font-ser);
-      font-size: 17px;
-      font-weight: 400;
-      color: var(--cream);
-      margin-bottom: 4px;
-    }
-
-    /* Buttons */
-    .config-btn-row {
-      display: flex;
-      gap: 12px;
-      margin-top: 28px;
-    }
-
-    .btn-config-next {
-      padding: 12px 32px;
-      background: var(--gold);
-      color: var(--bg);
-      border: none;
-      font-family: var(--font-san);
-      font-size: 13px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      cursor: pointer;
-      border-radius: 2px;
-      transition: background 0.2s;
-    }
-
-    .btn-config-next:hover { background: var(--gold-dim); }
-
-    .btn-config-back {
-      padding: 12px 24px;
-      background: transparent;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      font-family: var(--font-san);
-      font-size: 13px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      cursor: pointer;
-      border-radius: 2px;
-      transition: all 0.2s;
-    }
-
-    .btn-config-back:hover { border-color: var(--gold-dim); color: var(--cream); }
-
-    .btn-config-inquiry {
-      padding: 12px 32px;
-      background: var(--gold);
-      color: var(--bg);
-      border: none;
-      font-family: var(--font-san);
-      font-size: 13px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      cursor: pointer;
-      border-radius: 2px;
-      white-space: nowrap;
-      transition: background 0.2s;
-    }
-
-    .btn-config-inquiry:hover { background: var(--gold-dim); }
-
-    /* Responsive */
-    @media (max-width: 900px) {
-      .config-dims-layout { grid-template-columns: 1fr; gap: 32px; }
-      .config-svg-wrap { position: static; }
-      .config-summary-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    @media (max-width: 560px) {
-      .config-model-grid { grid-template-columns: repeat(2, 1fr); }
-      .config-summary-grid { grid-template-columns: 1fr 1fr; }
-      .config-inquiry-bar { flex-direction: column; align-items: flex-start; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sklo Leopold – Sklenářství, skla a zrcadla na míru</title>
+<meta name="description" content="Skla a zrcadla na míru. Čirá, ornamentní, bezpečnostní skla ESG/VSG, pískování, krbové sklo. Doprava po celé ČR. Tel: 777 716 326">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0d1b2a;--navy2:#1a2e42;--navy3:#243b55;
+  --gold:#c9a84c;--gold2:#e0c06a;
+  --white:#f9f7f4;--grey:#7a8da0;--text:#1e2d3d;
+  --border:rgba(201,168,76,.2);--card-border:rgba(0,0,0,.07);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--text);line-height:1.6}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(13,27,42,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);height:66px;display:flex;align-items:center;padding:0 5%;gap:2rem}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nav-logo img{height:32px;display:block}
+.nav-logo img[style*="none"]+span,.nav-logo span{color:var(--gold)}
+.nav-logo em{color:var(--white);font-style:normal;font-weight:300}
+nav ul{display:flex;gap:1.6rem;list-style:none;margin-left:auto;align-items:center}
+nav ul a{color:rgba(249,247,244,.7);text-decoration:none;font-size:.84rem;letter-spacing:.05em;text-transform:uppercase;transition:color .2s}
+nav ul a:hover{color:var(--gold2)}
+.nav-cta{background:var(--gold)!important;color:var(--navy)!important;padding:.4rem 1rem;border-radius:3px;font-weight:500!important}
+.nav-cta:hover{background:var(--gold2)!important}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;margin-left:auto}
+.hamburger span{width:24px;height:2px;background:var(--white);transition:.3s}
+
+/* ── HERO ── */
+.hero{min-height:100vh;background:linear-gradient(135deg,var(--navy) 0%,var(--navy3) 60%,#1e3a5f 100%);display:flex;align-items:center;padding:100px 5% 60px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(168,216,234,.06) 0%,transparent 60%)}
+.hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:4rem;max-width:1200px;margin:0 auto;width:100%;align-items:center;position:relative;z-index:1}
+.hero-tag{display:inline-block;border:1px solid var(--gold);color:var(--gold);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;padding:.25rem .7rem;margin-bottom:1.4rem}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,4vw,3.5rem);color:var(--white);line-height:1.15;margin-bottom:1.4rem;font-weight:600}
+.hero h1 em{color:var(--gold);font-style:normal}
+.hero-desc{color:rgba(249,247,244,.68);font-size:1rem;margin-bottom:2.2rem;line-height:1.75;font-weight:300}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap}
+.btn-gold{background:var(--gold);color:var(--navy);padding:.8rem 1.8rem;border:none;border-radius:3px;font-size:.93rem;font-weight:500;cursor:pointer;text-decoration:none;display:inline-block;transition:background .2s,transform .15s;font-family:'DM Sans',sans-serif}
+.btn-gold:hover{background:var(--gold2);transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--white);padding:.8rem 1.8rem;border:1px solid rgba(249,247,244,.35);border-radius:3px;font-size:.93rem;cursor:pointer;text-decoration:none;display:inline-block;transition:border-color .2s,color .2s;font-family:'DM Sans',sans-serif}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.hero-stats{display:flex;gap:2.5rem;margin-top:2.5rem;padding-top:1.8rem;border-top:1px solid var(--border)}
+.stat-n{font-family:'Playfair Display',serif;font-size:1.65rem;color:var(--gold)}
+.stat-l{font-size:.72rem;color:rgba(249,247,244,.5);text-transform:uppercase;letter-spacing:.09em}
+.hero-visual{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;height:400px}
+.gtile{border-radius:4px;overflow:hidden;position:relative;background:var(--navy2)}
+.gtile img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.gtile:hover img{transform:scale(1.04)}
+.gtile:first-child{grid-row:span 2}
+.gtile-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(13,27,42,.85));color:var(--white);font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;padding:1.4rem .7rem .5rem}
+
+/* ── SHARED ── */
+.stag{font-size:.68rem;text-transform:uppercase;letter-spacing:.2em;color:var(--gold);margin-bottom:.6rem}
+.stitle{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,3vw,2.3rem);color:var(--navy);margin-bottom:.7rem;line-height:1.2}
+.sdesc{color:var(--grey);font-size:.95rem;max-width:580px;font-weight:300}
+.section-hdr{margin-bottom:2.8rem}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .5s,transform .5s}
+.reveal.vis{opacity:1;transform:none}
+
+/* ── CATALOG ── */
+#katalog{padding:80px 5%}
+.cat-wrap{max-width:1260px;margin:0 auto}
+
+/* Category tabs */
+.cat-tabs{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:2.5rem}
+.ctab{background:none;border:1px solid rgba(0,0,0,.13);border-radius:20px;padding:.35rem .9rem;font-size:.78rem;font-family:'DM Sans',sans-serif;cursor:pointer;color:var(--text);transition:all .2s;white-space:nowrap}
+.ctab:hover{border-color:var(--gold);color:var(--gold)}
+.ctab.active{background:var(--navy);color:var(--gold);border-color:var(--navy)}
+
+/* Category page header */
+.cat-page-header{margin-bottom:2.5rem}
+.cat-page-title{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--navy);margin-bottom:.4rem}
+.cat-page-desc{color:var(--grey);font-size:.93rem;max-width:720px;line-height:1.65}
+
+/* All-view category block */
+.all-cat-block{margin-bottom:3.5rem}
+.all-cat-block:last-child{margin-bottom:0}
+.all-cat-title-row{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;padding-bottom:.75rem;border-bottom:2px solid var(--gold);margin-bottom:1.5rem;flex-wrap:wrap}
+.all-cat-name{font-family:'Playfair Display',serif;font-size:1.35rem;color:var(--navy)}
+.all-cat-desc{color:var(--grey);font-size:.82rem;margin-top:.2rem}
+.show-all-btn{font-size:.76rem;color:var(--gold);background:none;border:1px solid var(--gold);border-radius:20px;padding:.25rem .75rem;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0;transition:all .2s}
+.show-all-btn:hover{background:var(--gold);color:var(--navy)}
+
+/* Sub-category section */
+.subcat-section{margin:2.2rem 0 .8rem}
+.subcat-section:first-child{margin-top:0}
+.subcat-name{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--navy2);margin-bottom:.3rem}
+.subcat-note{font-size:.8rem;color:var(--grey);line-height:1.55;max-width:740px;margin-bottom:1rem}
+
+/* Product grid */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:1.1rem}
+.pcard{background:#fff;border:1px solid var(--card-border);border-radius:6px;overflow:hidden;transition:box-shadow .2s,transform .2s}
+.pcard:hover{box-shadow:0 8px 28px rgba(13,27,42,.1);transform:translateY(-2px)}
+.pcard-img{height:160px;overflow:hidden;position:relative}
+.pcard-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.pcard:hover .pcard-img img{transform:scale(1.05)}
+.pcard-body{padding:.95rem 1.05rem 1.1rem}
+.pcard-name{font-family:'Playfair Display',serif;font-size:.97rem;color:var(--navy);margin-bottom:.28rem;line-height:1.3}
+.pcard-spec{font-size:.76rem;color:var(--grey);line-height:1.45;margin-bottom:.75rem}
+.pcard-foot{display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+.pcard-price{font-weight:500;font-size:.88rem;color:var(--text);flex-shrink:0}
+.pcard-unit{font-size:.7rem;color:var(--grey);font-weight:400;display:block}
+.btn-poptavka{background:var(--navy);color:var(--white);font-size:.74rem;padding:.38rem .8rem;border:none;border-radius:3px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s;white-space:nowrap;flex-shrink:0}
+.btn-poptavka:hover{background:var(--gold);color:var(--navy)}
+
+/* ── SERVICES ── */
+#sluzby{padding:80px 5%;background:var(--navy)}
+#sluzby .stitle{color:var(--white)}
+.srv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.2rem;max-width:1200px;margin:0 auto}
+.srv-card{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:6px;padding:1.5rem;transition:background .2s,border-color .2s}
+.srv-card:hover{background:rgba(201,168,76,.07);border-color:rgba(201,168,76,.4)}
+.srv-icon{font-size:1.7rem;margin-bottom:.85rem}
+.srv-name{font-family:'Playfair Display',serif;font-size:.98rem;color:var(--white);margin-bottom:.35rem}
+.srv-desc{font-size:.8rem;color:var(--grey);line-height:1.6}
+
+/* ── HOW ── */
+#jak{padding:80px 5%;background:#f3f0eb}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;max-width:1060px;margin:0 auto}
+.step{text-align:center;padding:0 .3rem}
+.step-n{width:48px;height:48px;background:var(--gold);color:var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:600;margin:0 auto 1rem}
+.step-t{font-family:'Playfair Display',serif;font-size:.93rem;color:var(--navy);margin-bottom:.35rem}
+.step-d{font-size:.8rem;color:var(--grey);line-height:1.6}
+
+/* ── CONTACT ── */
+#kontakt{padding:80px 5%}
+.contact-layout{display:grid;grid-template-columns:1fr 1.4fr;gap:4rem;max-width:1060px;margin:0 auto;align-items:start}
+.contact-info h2{font-family:'Playfair Display',serif;font-size:1.85rem;color:var(--navy);margin-bottom:.85rem}
+.contact-info p{color:var(--grey);font-weight:300;line-height:1.75;margin-bottom:2rem}
+.cdetail{display:flex;gap:.85rem;align-items:flex-start;margin-bottom:1.2rem}
+.cdetail-icon{width:38px;height:38px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.cdetail strong{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--navy);margin-bottom:.12rem}
+.cdetail a,.cdetail span{color:var(--grey);font-size:.9rem;text-decoration:none}
+.cdetail a:hover{color:var(--gold)}
+.fcard{background:var(--navy);border-radius:8px;padding:2rem 2.2rem 2.5rem}
+.fcard h3{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--white);margin-bottom:.25rem}
+.fcard>p{color:var(--grey);font-size:.83rem;margin-bottom:1.5rem}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:.85rem}
+.fg{margin-bottom:1rem}
+.fg label{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.13em;color:rgba(249,247,244,.55);margin-bottom:.35rem}
+.fg input,.fg select,.fg textarea{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.11);border-radius:4px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.62rem .9rem;outline:none;transition:border-color .2s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold)}
+.fg select option{background:var(--navy)}
+.fg textarea{resize:vertical;min-height:100px}
+.fsub{width:100%;background:var(--gold);color:var(--navy);border:none;border-radius:4px;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:500;padding:.9rem;cursor:pointer;margin-top:.3rem;transition:background .2s}
+.fsub:hover{background:var(--gold2)}
+.fnote{font-size:.69rem;color:rgba(249,247,244,.35);text-align:center;margin-top:.65rem}
+.fsuccess{display:none;text-align:center;padding:2rem;color:var(--gold)}
+
+/* ── FOOTER ── */
+footer{background:var(--navy);border-top:1px solid var(--border);padding:2.8rem 5%}
+.footer-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2.5rem}
+.footer-brand p{color:var(--grey);font-size:.82rem;line-height:1.65;font-weight:300;margin-top:.65rem}
+.footer-col h4{font-size:.7rem;text-transform:uppercase;letter-spacing:.15em;color:var(--gold);margin-bottom:.85rem}
+.footer-col ul{list-style:none}
+.footer-col li{margin-bottom:.45rem}
+.footer-col a{color:var(--grey);text-decoration:none;font-size:.83rem;transition:color .2s}
+.footer-col a:hover{color:var(--gold2)}
+.footer-bottom{max-width:1200px;margin:2rem auto 0;padding-top:1.2rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.footer-bottom p,.footer-bottom a{color:var(--grey);font-size:.77rem;text-decoration:none}
+.footer-bottom a:hover{color:var(--gold)}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(13,27,42,.87);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.mbox{background:var(--navy2);border:1px solid var(--border);border-radius:8px;padding:2rem;max-width:480px;width:100%;position:relative;max-height:90vh;overflow-y:auto}
+.mclose{position:absolute;top:.9rem;right:1rem;background:none;border:none;color:var(--grey);font-size:1.4rem;cursor:pointer;line-height:1}
+.mclose:hover{color:var(--white)}
+.mtitle{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--white);margin-bottom:.2rem}
+.mproduct{color:var(--gold);font-size:.83rem;margin-bottom:1.3rem}
+
+/* ── TERMS ── */
+.terms-wrap{max-width:880px;margin:0 auto;padding:110px 5% 70px}
+.terms-wrap h1{font-family:'Playfair Display',serif;font-size:2rem;color:var(--navy);margin-bottom:1.8rem}
+.terms-wrap h2{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--navy);margin:1.6rem 0 .6rem}
+.terms-wrap p,.terms-wrap li{color:var(--text);font-size:.9rem;line-height:1.75;margin-bottom:.6rem}
+.terms-wrap ul{padding-left:1.3rem}
+.back-link{display:inline-flex;align-items:center;gap:.3rem;color:var(--gold);text-decoration:none;font-size:.86rem;margin-bottom:1.6rem}
+.back-link:hover{color:var(--gold2)}
+
+/* ── PAGE SYSTEM ── */
+.page{display:none}
+.page.active{display:block}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  nav ul{display:none}
+  .hamburger{display:flex}
+  nav ul.open{display:flex;flex-direction:column;position:absolute;top:66px;left:0;right:0;background:var(--navy);padding:1.2rem 5%;gap:.9rem;border-bottom:1px solid var(--border)}
+  .hero-inner{grid-template-columns:1fr}
+  .hero-visual{display:none}
+  .steps{grid-template-columns:1fr 1fr}
+  .contact-layout{grid-template-columns:1fr;gap:2rem}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  #katalog,#sluzby,#jak,#kontakt{padding:55px 5%}
+  .steps{grid-template-columns:1fr}
+  .frow{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr}
+  .footer-bottom{flex-direction:column;gap:.6rem;text-align:center}
+}
+</style>
 </head>
-
 <body>
 
-  <!-- ─── NAVIGATION ──────────────────────────────────────────── -->
-  <nav>
-    <a href="#" class="nav-logo">Vir<span>id</span>is</a>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="#skleniky">Skleníky</a></li>
-      <li><a href="#misy">Mísy</a></li>
-      <li><a href="#o-znacce">O značce</a></li>
-      <li><a href="#konfigurator">Konfigurátor</a></li>
-      <li><a href="#kontakt" class="nav-cta">Kontakt</a></li>
-    </ul>
-    <div class="nav-burger" id="navBurger" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </div>
-  </nav>
+<!-- NAV -->
+<nav id="mainNav">
+  <a class="nav-logo" href="#" onclick="showPage('home');return false">
+    <img src="images/logo.png" alt="Sklo Leopold" onerror="this.style.display='none'">
+    <span>Sklo <em>Leopold</em></span>
+  </a>
+  <ul id="navLinks">
+    <li><a href="#katalog" onclick="closeMobile()">Katalog</a></li>
+    <li><a href="#sluzby" onclick="closeMobile()">Služby</a></li>
+    <li><a href="#jak" onclick="closeMobile()">Jak objednat</a></li>
+    <li><a href="#kontakt" class="nav-cta" onclick="closeMobile()">Poptávka</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+</nav>
 
-  <!-- ─── HERO ─────────────────────────────────────────────────── -->
-  <section class="hero" id="top">
-    <div class="hero-bg"></div>
-    <div class="hero-line"></div>
-    <div class="hero-content">
-      <span class="hero-eyebrow">Česká ruční výroba · Ohýbané sklo</span>
-      <h1 class="hero-title">
-        Skleníky<br /><em>ze skla a světla</em>
-      </h1>
-      <p class="hero-sub">
-        Každý kus vzniká ručně v České republice z&nbsp;4mm low-iron float skla a&nbsp;ocelového rámu v&nbsp;RAL&nbsp;9005 matná černá.
-      </p>
-      <div class="hero-actions">
-        <a href="#skleniky" class="btn-primary">Prohlédnout kolekci</a>
-        <a href="#kontakt" class="btn-ghost">Nezávazná poptávka</a>
+<!-- ════════════ HOME PAGE ════════════ -->
+<div class="page active" id="page-home">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-tag">Sklenářství na míru</div>
+      <h1>Skla a zrcadla<br><em>přesně podle vás</em></h1>
+      <p class="hero-desc">Vyrábíme a dodáváme čirá, ornamentní i bezpečnostní skla, zrcadla a krbová skla na míru. Každá zakázka individuálně — doprava po celé ČR.</p>
+      <div class="hero-btns">
+        <a href="#kontakt" class="btn-gold">Nezávazná poptávka</a>
+        <a href="#katalog" class="btn-ghost">Prohlédnout katalog</a>
+      </div>
+      <div class="hero-stats">
+        <div><div class="stat-n">20+</div><div class="stat-l">let zkušeností</div></div>
+        <div><div class="stat-n">100%</div><div class="stat-l">na míru</div></div>
+        <div><div class="stat-n">celá ČR</div><div class="stat-l">doprava</div></div>
       </div>
     </div>
-    <div class="hero-scroll">Scroll</div>
-  </section>
-
-  <!-- ─── BRAND BAR ─────────────────────────────────────────────── -->
-  <div class="brand-bar">
-    <div class="brand-bar-item"><span class="dot"></span>Czech Made</div>
-    <div class="brand-bar-item"><span class="dot"></span>4 mm Low-Iron Float Sklo</div>
-    <div class="brand-bar-item"><span class="dot"></span>Ocel RAL 9005 Matná Černá</div>
-    <div class="brand-bar-item"><span class="dot"></span>Zakázkové Rozměry</div>
-    <div class="brand-bar-item"><span class="dot"></span>Doprava EU</div>
+    <div class="hero-visual">
+      <div class="gtile" style="background:linear-gradient(135deg,#1e3a5f,#2a5080)">
+        <img src="images/cire_sklo.jpg" alt="Čiré sklo" onerror="this.style.display='none'">
+        <div class="gtile-label">Čirá skla</div>
+      </div>
+      <div class="gtile" style="background:linear-gradient(135deg,#2a3848,#3a5060)">
+        <img src="images/zrcadla_banner.png" alt="Zrcadla" onerror="this.style.display='none'">
+        <div class="gtile-label">Zrcadla</div>
+      </div>
+      <div class="gtile" style="background:linear-gradient(135deg,#3a2a1e,#5a4030)">
+        <img src="images/krbove.png" alt="Krbové sklo" onerror="this.style.display='none'">
+        <div class="gtile-label">Krbové sklo</div>
+      </div>
+    </div>
   </div>
+</section>
 
-  <!-- ─── SEKCE 1 — SKLENÍKY ────────────────────────────────────── -->
-  <section class="products-section" id="skleniky">
-    <div class="section-header">
-      <span class="section-label">Kolekce 01</span>
-      <h2 class="section-title">Skleníky<br /><em>z ohýbaného skla</em></h2>
-      <div class="section-rule"></div>
+<!-- CATALOG -->
+<section id="katalog">
+  <div class="cat-wrap">
+    <div class="section-hdr reveal">
+      <div class="stag">Nabídka produktů</div>
+      <h2 class="stitle">Kompletní katalog</h2>
+      <p class="sdesc">Ceny jsou orientační za m² pro základní rozměr. Finální cena závisí na přesných rozměrech a opracování — zašleme nabídku na míru.</p>
     </div>
+    <div class="cat-tabs" id="catTabs"></div>
+    <div id="catContent"></div>
+  </div>
+</section>
 
-    <div class="product-grid">
-
-      <!-- Model 01 -->
-      <article class="product-card fade-up">
-        <div class="product-img">
-          <img src="sklenik2.jpg" alt="VIRIDIS Table S" onerror="this.parentElement.innerHTML=placeholderHTML('sklenik2.jpg')" />
-        </div>
-        <div class="product-overlay"></div>
-        <div class="product-info">
-          <p class="product-model">Model 01</p>
-          <h3 class="product-name">Table S</h3>
-          <p class="product-dims">400 × 250 × 250 mm</p>
-          <p class="product-desc">Nejmenší model řady, ideální pro sukulenty a mech. Skvělý dárkový předmět.</p>
-          <div class="product-tags">
-            <span class="tag">Sedlová střecha</span>
-            <span class="tag">Rovné sklo</span>
-            <span class="tag">Přední panel</span>
-          </div>
-        </div>
-        <div class="card-arrow">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14L14 2M14 2H5M14 2V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </div>
-      </article>
-
-      <!-- Model 02 -->
-      <article class="product-card fade-up">
-        <div class="product-img">
-          <img src="sklenik.jpg" alt="VIRIDIS Table M" onerror="this.parentElement.innerHTML=placeholderHTML('sklenik.jpg')" />
-        </div>
-        <div class="product-overlay"></div>
-        <div class="product-info">
-          <p class="product-model">Model 02</p>
-          <h3 class="product-name">Table M</h3>
-          <p class="product-dims">800 × 400 × 380 mm</p>
-          <p class="product-desc">Hlavní model řady s obloukem z ohýbaného skla. Ideální pro kapradiny a tropické rostliny.</p>
-          <div class="product-tags">
-            <span class="tag">1× Oblouk</span>
-            <span class="tag">Ohýbané sklo</span>
-            <span class="tag">2× Panty</span>
-          </div>
-        </div>
-        <div class="card-arrow">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14L14 2M14 2H5M14 2V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </div>
-      </article>
-
-      <!-- Model 03 -->
-      <article class="product-card fade-up">
-        <div class="product-img">
-          <img src="sklenik4.jpg" alt="VIRIDIS Table L" onerror="this.parentElement.innerHTML=placeholderHTML('sklenik4.jpg')" />
-        </div>
-        <div class="product-overlay"></div>
-        <div class="product-info">
-          <p class="product-model">Model 03</p>
-          <h3 class="product-name">Table L</h3>
-          <p class="product-dims">1000 × 450 × 380 mm</p>
-          <p class="product-desc">Dvojitý oblouk, dominantní kus pro jídelní stůl nebo recepci. Nelze letecky dopravit z&nbsp;Číny.</p>
-          <div class="product-tags">
-            <span class="tag">2× Oblouk</span>
-            <span class="tag">2-sekční panel</span>
-          </div>
-        </div>
-        <div class="card-arrow">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14L14 2M14 2H5M14 2V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </div>
-      </article>
-
-      <!-- Model 04 -->
-      <article class="product-card fade-up">
-        <div class="product-img">
-          <img src="sklenik3.jpg" alt="VIRIDIS Table XL" onerror="this.parentElement.innerHTML=placeholderHTML('sklenik3.jpg')" />
-        </div>
-        <div class="product-overlay"></div>
-        <div class="product-info">
-          <p class="product-model">Model 04</p>
-          <h3 class="product-name">Table XL</h3>
-          <p class="product-dims">1200 × 450 × 400 mm</p>
-          <p class="product-desc">Největší stolní model pro hotely a kancelářské recepce.</p>
-          <div class="product-tags">
-            <span class="tag">2× Oblouk</span>
-            <span class="tag">Hotelové projekty</span>
-            <span class="tag">2-sekční panel</span>
-          </div>
-        </div>
-        <div class="card-arrow">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14L14 2M14 2H5M14 2V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </div>
-      </article>
-
-      <!-- Model 05 -->
-      <article class="product-card fade-up">
-        <div class="product-img">
-          <img src="sklenik16.jpg" alt="VIRIDIS Cradle" onerror="this.parentElement.innerHTML=placeholderHTML('sklenik16.jpg')" />
-        </div>
-        <div class="product-overlay"></div>
-        <div class="product-info">
-          <p class="product-model">Model 05</p>
-          <h3 class="product-name">Cradle</h3>
-          <p class="product-dims">800 × 400 × 350 mm vč. nožiček</p>
-          <p class="product-desc">Oblouk dole, hairpin nožičky, otevřený vrch. Přístup k rostlinám shora.</p>
-          <div class="product-tags">
-            <span class="tag">Oblouk dole</span>
-            <span class="tag">Hairpin nožičky</span>
-            <span class="tag">Otevřený vrch</span>
-          </div>
-        </div>
-        <div class="card-arrow">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14L14 2M14 2H5M14 2V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </div>
-      </article>
-
-      <!-- Model 06 -->
-      <article class="product-card fade-up">
-        <div class="product-img">
-          <img src="sklenik17.jpg" alt="VIRIDIS Cradle XL" onerror="this.parentElement.innerHTML=placeholderHTML('sklenik17.jpg')" />
-        </div>
-        <div class="product-overlay"></div>
-        <div class="product-info">
-          <p class="product-model">Model 06</p>
-          <h3 class="product-name">Cradle XL</h3>
-          <p class="product-dims">1400 × 400 × 350 mm vč. nožiček</p>
-          <p class="product-desc">Prodloužená Cradle, dominantní středový kus pro velký stůl.</p>
-          <div class="product-tags">
-            <span class="tag">6× Hairpin</span>
-            <span class="tag">Centerpiece</span>
-          </div>
-        </div>
-        <div class="card-arrow">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14L14 2M14 2H5M14 2V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </div>
-      </article>
-
-      <!-- Model 07 -->
-      <article class="product-card fade-up">
-        <div class="product-img">
-          <img src="sklenik18.jpg" alt="VIRIDIS Monolith" style="object-position: top;" onerror="this.parentElement.innerHTML=placeholderHTML('sklenik18.jpg')" />
-        </div>
-        <div class="product-overlay"></div>
-        <div class="product-info">
-          <p class="product-model">Model 07</p>
-          <h3 class="product-name">Monolith</h3>
-          <p class="product-dims">250 × 200 × 1600 mm</p>
-          <p class="product-desc">Vysoký úzký skleník jako živá socha. Stojí samostatně na podlaze. Unikátní formát.</p>
-          <div class="product-tags">
-            <span class="tag">Podlahový</span>
-            <span class="tag">Oblouk nahoře</span>
-            <span class="tag">Unikátní</span>
-          </div>
-        </div>
-        <div class="card-arrow">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14L14 2M14 2H5M14 2V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </div>
-      </article>
-
-      <!-- Model 08 -->
-      <article class="product-card fade-up">
-        <div class="product-img">
-          <img src="sklenik20.jpg" alt="VIRIDIS Prism" onerror="this.parentElement.innerHTML=placeholderHTML('sklenik20.jpg')" />
-        </div>
-        <div class="product-overlay"></div>
-        <div class="product-info">
-          <p class="product-model">Model 08</p>
-          <h3 class="product-name">Prism</h3>
-          <p class="product-dims">700 × 400 × 350 mm</p>
-          <p class="product-desc">Geometrický tvar, střecha jako stan nebo list.</p>
-          <div class="product-tags">
-            <span class="tag">Trojúhelníkový průřez</span>
-            <span class="tag">Ohýbaná střecha</span>
-          </div>
-        </div>
-        <div class="card-arrow">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14L14 2M14 2H5M14 2V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </div>
-      </article>
-
-      <!-- Model 09 -->
-      <article class="product-card fade-up">
-        <div class="product-img">
-          <img src="wave.jpg" alt="VIRIDIS Wave" onerror="this.parentElement.innerHTML=placeholderHTML('wave.jpg')" />
-        </div>
-        <div class="product-overlay"></div>
-        <div class="product-info">
-          <p class="product-model">Model 09</p>
-          <h3 class="product-name">Wave</h3>
-          <p class="product-dims">900 × 400 mm · výška 150–450 mm</p>
-          <p class="product-desc">Tvar rozbíjející se vlny — levá strana vysoká, pravá nízká. Přirozená kompozice zahrady.</p>
-          <div class="product-tags">
-            <span class="tag">Asymetrický ohyb</span>
-            <span class="tag">Otevřený vrch</span>
-          </div>
-        </div>
-        <div class="card-arrow">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14L14 2M14 2H5M14 2V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </div>
-      </article>
-
+<!-- SERVICES -->
+<section id="sluzby">
+  <div style="max-width:1200px;margin:0 auto">
+    <div class="section-hdr reveal">
+      <div class="stag">Opracování</div>
+      <h2 class="stitle">Naše služby</h2>
+      <p class="sdesc" style="color:var(--grey)">Sklo zpracujeme přesně dle vašich požadavků.</p>
     </div>
-  </section>
-
-  <!-- ─── SEKCE 2 — MÍSY ────────────────────────────────────────── -->
-  <section class="bowls-section" id="misy">
-    <div class="section-header">
-      <span class="section-label">Kolekce 02</span>
-      <h2 class="section-title">Mísy<br /><em>z lehaného skla</em></h2>
-      <div class="section-rule"></div>
+    <div class="srv-grid">
+      <div class="srv-card reveal"><div class="srv-icon">✂️</div><div class="srv-name">Řezání na míru</div><div class="srv-desc">Atypické tvary i standardní formáty, každý kus řezán přesně dle rozměrů.</div></div>
+      <div class="srv-card reveal"><div class="srv-icon">🔵</div><div class="srv-name">Broušení hran</div><div class="srv-desc">Broušení a leštění hran pro bezpečné a estetické skleněné plochy.</div></div>
+      <div class="srv-card reveal"><div class="srv-icon">🔩</div><div class="srv-name">Vrtání otvorů</div><div class="srv-desc">Přesné vrtání pro úchyty, závěsy a kolejnice.</div></div>
+      <div class="srv-card reveal"><div class="srv-icon">🔥</div><div class="srv-name">Kalení (ESG)</div><div class="srv-desc">Tepelné kalení pro zvýšení pevnosti a bezpečnosti skla.</div></div>
+      <div class="srv-card reveal"><div class="srv-icon">🌫️</div><div class="srv-name">Pískování</div><div class="srv-desc">Matování a dekorativní vzory pískováním pro interiéry i exteriéry.</div></div>
+      <div class="srv-card reveal"><div class="srv-icon">🚚</div><div class="srv-name">Doprava po ČR</div><div class="srv-desc">Kurýrní doručení nebo vlastní závoz, bezpečně zabaleno.</div></div>
     </div>
+  </div>
+</section>
 
-    <div class="bowl-grid">
-
-      <!-- Model 10 -->
-      <article class="product-card fade-up">
-        <div class="product-img">
-          <img src="misa4.jpg" alt="VIRIDIS Bowl" onerror="this.parentElement.innerHTML=placeholderHTML('misa4.jpg')" />
-        </div>
-        <div class="product-overlay"></div>
-        <div class="product-info">
-          <p class="product-model">Model 10</p>
-          <h3 class="product-name">Bowl</h3>
-          <p class="product-dims">∅ ~550 mm · výška ~150 mm vč. stojanu</p>
-          <p class="product-desc">Organický tvar, každý kus unikát, přirozeně zvlněné okraje. Pro sukulenty a mech.</p>
-          <div class="product-tags">
-            <span class="tag">Lehané sklo</span>
-            <span class="tag">Kruhový stojan</span>
-            <span class="tag">Každý kus unikát</span>
-          </div>
-        </div>
-        <div class="card-arrow">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14L14 2M14 2H5M14 2V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </div>
-      </article>
-
-      <!-- Model 11 -->
-      <article class="product-card fade-up">
-        <div class="product-img">
-          <img src="lake.jpg" alt="VIRIDIS Lake" onerror="this.parentElement.innerHTML=placeholderHTML('lake.jpg')" />
-        </div>
-        <div class="product-overlay"></div>
-        <div class="product-info">
-          <p class="product-model">Model 11</p>
-          <h3 class="product-name">Lake</h3>
-          <p class="product-dims">∅ 600–700 mm</p>
-          <p class="product-desc">Propad uprostřed jako jezero, okraje ploché. Leží přímo na stole bez stojanu.</p>
-          <div class="product-tags">
-            <span class="tag">Lehané sklo</span>
-            <span class="tag">Bez stojanu</span>
-            <span class="tag">Každý kus unikát</span>
-          </div>
-        </div>
-        <div class="card-arrow">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 14L14 2M14 2H5M14 2V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </div>
-      </article>
-
+<!-- HOW -->
+<section id="jak">
+  <div style="max-width:1060px;margin:0 auto">
+    <div class="section-hdr reveal" style="text-align:center">
+      <div class="stag">Postup</div>
+      <h2 class="stitle">Jak objednávka probíhá</h2>
+      <p class="sdesc" style="margin:0 auto">Jednoduše a bez zbytečné byrokracie.</p>
     </div>
-  </section>
-
-  <!-- ─── O ZNAČCE ──────────────────────────────────────────────── -->
-  <section class="about-section" id="o-znacce">
-    <div class="about-inner">
-      <div class="about-text">
-        <span class="section-label">O značce VIRIDIS</span>
-        <h2 class="about-heading">Řemeslo,<br /><em>které přetrvá</em></h2>
-        <p class="about-body">
-          VIRIDIS vznikla z vize propojit tradici českého sklářství s&nbsp;moderním minimalistickým designem. Každý skleník je výsledkem precizní ruční práce — od ohýbání skla přes ocelové rámy až po konečnou montáž.
-        </p>
-        <p class="about-body">
-          Používáme výhradně 4mm low-iron float sklo s&nbsp;vysokou propustností světla, ideální pro citlivé rostliny. Ocelový rám je lakovaný práškovou barvou RAL&nbsp;9005 matná černá, která odolá vlhkosti a&nbsp;času.
-        </p>
-        <div class="about-specs">
-          <div class="spec-item">
-            <p class="spec-label">Sklo</p>
-            <p class="spec-value">4 mm Low-Iron Float</p>
-          </div>
-          <div class="spec-item">
-            <p class="spec-label">Rám</p>
-            <p class="spec-value">Ocel RAL 9005 matná černá</p>
-          </div>
-          <div class="spec-item">
-            <p class="spec-label">Výroba</p>
-            <p class="spec-value">Česká republika</p>
-          </div>
-          <div class="spec-item">
-            <p class="spec-label">Doprava</p>
-            <p class="spec-value">Celá EU</p>
-          </div>
-          <div class="spec-item" style="grid-column: 1/-1;">
-            <p class="spec-label">Zakázkové rozměry</p>
-            <p class="spec-value">Na vyžádání — kontaktujte nás pro individuální nabídku</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="about-visual">
-        <div class="about-img-wrap">
-          <img src="sklenik.jpg" alt="VIRIDIS výroba" onerror="this.style.display='none'" />
-        </div>
-        <div class="about-badge">
-          <span class="about-badge-text">Czech<br/>Made</span>
-        </div>
-      </div>
+    <div class="steps">
+      <div class="step reveal"><div class="step-n">1</div><div class="step-t">Poptávka</div><div class="step-d">Vyplňte formulář nebo zavolejte. Sdělte nám rozměry, typ skla a požadované opracování.</div></div>
+      <div class="step reveal"><div class="step-n">2</div><div class="step-t">Nabídka</div><div class="step-d">Obratem zašleme přesnou cenovou nabídku na míru vaší zakázky.</div></div>
+      <div class="step reveal"><div class="step-n">3</div><div class="step-t">Výroba</div><div class="step-d">Po potvrzení zahájíme výrobu. Každý kus vyroben s přesností na milimetry.</div></div>
+      <div class="step reveal"><div class="step-n">4</div><div class="step-t">Doručení</div><div class="step-d">Bezpečně zabalíme a doručíme kurýrem nebo vlastním závozem kamkoli v ČR.</div></div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ─── KONFIGURÁTOR ────────────────────────────────────────────── -->
-  <section class="config-section" id="konfigurator">
-    <div class="section-header">
-      <span class="section-label">Konfigurátor</span>
-      <h2 class="section-title">Navrhněte<br /><em>svůj skleník</em></h2>
-      <div class="section-rule"></div>
-      <p style="max-width:480px;margin:0 auto;font-size:14px;color:var(--muted);text-align:center;margin-top:16px;">Vyberte typ, zadejte rozměry a pošlete nám poptávku — vyrobíme přesně to, co si přejete.</p>
+<!-- CONTACT -->
+<section id="kontakt">
+  <div class="contact-layout">
+    <div class="reveal">
+      <div class="stag">Kontakt</div>
+      <h2 class="stitle" style="font-size:1.85rem">Poptejte nás bez závazků</h2>
+      <p style="color:var(--grey);font-weight:300;line-height:1.75;margin-bottom:2rem">Napište o jaké sklo máte zájem, sdělte rozměry a my obratem zašleme cenovou nabídku. Rádi poradíme i s výběrem materiálu.</p>
+      <div class="cdetail"><div class="cdetail-icon">📞</div><div><strong>Telefon</strong><a href="tel:777716326">777 716 326</a></div></div>
+      <div class="cdetail"><div class="cdetail-icon">✉️</div><div><strong>E-mail</strong><a href="mailto:info@sklarnaleopold.cz">info@sklarnaleopold.cz</a></div></div>
+      <div class="cdetail"><div class="cdetail-icon">⏰</div><div><strong>Pracovní doba</strong><span>Po–Pá: 8:00–16:00</span></div></div>
     </div>
-
-    <div class="config-wrapper">
-
-      <!-- Krokový indikátor -->
-      <div class="config-steps">
-        <div class="config-step active" id="cstep1">
-          <span class="step-num">1</span>
-          <span class="step-label">Typ</span>
+    <div class="fcard reveal">
+      <h3>Poptávkový formulář</h3>
+      <p>Odpovíme do 24 hodin v pracovní dny.</p>
+      <form id="mainForm" action="https://formspree.io/f/mkoqjgpz" method="POST">
+        <div class="frow">
+          <div class="fg"><label>Jméno a příjmení *</label><input type="text" name="jmeno" required placeholder="Jan Novák"></div>
+          <div class="fg"><label>Telefon</label><input type="tel" name="telefon" placeholder="+420 777 000 000"></div>
         </div>
-        <div class="config-step-line"></div>
-        <div class="config-step" id="cstep2">
-          <span class="step-num">2</span>
-          <span class="step-label">Rozměry</span>
+        <div class="fg"><label>E-mail *</label><input type="email" name="email" required placeholder="vas@email.cz"></div>
+        <div class="fg"><label>Typ produktu</label>
+          <select name="produkt">
+            <option value="">— Vyberte —</option>
+            <option>Čiré sklo</option><option>Ornamentní sklo</option><option>Pískování</option>
+            <option>ESG – kalené sklo</option><option>VSG – vrstvené lepené sklo</option>
+            <option>VSG+ESG – vrstvené kalené sklo</option><option>Zrcadlo</option>
+            <option>Krbové sklo</option><option>Jiné / nevím</option>
+          </select>
         </div>
-        <div class="config-step-line"></div>
-        <div class="config-step" id="cstep3">
-          <span class="step-num">3</span>
-          <span class="step-label">Souhrn</span>
+        <div class="fg"><label>Popis (rozměry, množství, opracování…)</label>
+          <textarea name="zprava" placeholder="Např.: Čiré sklo 6 mm, 80×60 cm, broušené hrany, 2 ks…"></textarea>
         </div>
-      </div>
-
-      <!-- ── KROK 1: Výběr modelu ── -->
-      <div class="config-panel active" id="configPanel1">
-        <div class="config-model-grid">
-          <div class="config-model-card" data-model="01" data-name="Table S" data-shape="rect" data-l="400" data-w="250" data-h="250">
-            <div class="cmc-num">Model 01</div>
-            <div class="cmc-name">Table S</div>
-            <div class="cmc-dims">400 × 250 × 250</div>
-          </div>
-          <div class="config-model-card" data-model="02" data-name="Table M" data-shape="rect" data-l="800" data-w="400" data-h="380">
-            <div class="cmc-num">Model 02</div>
-            <div class="cmc-name">Table M</div>
-            <div class="cmc-dims">800 × 400 × 380</div>
-          </div>
-          <div class="config-model-card" data-model="03" data-name="Table L" data-shape="rect" data-l="1000" data-w="450" data-h="380">
-            <div class="cmc-num">Model 03</div>
-            <div class="cmc-name">Table L</div>
-            <div class="cmc-dims">1000 × 450 × 380</div>
-          </div>
-          <div class="config-model-card" data-model="04" data-name="Table XL" data-shape="rect" data-l="1200" data-w="450" data-h="400">
-            <div class="cmc-num">Model 04</div>
-            <div class="cmc-name">Table XL</div>
-            <div class="cmc-dims">1200 × 450 × 400</div>
-          </div>
-          <div class="config-model-card" data-model="05" data-name="Cradle" data-shape="cradle" data-l="800" data-w="400" data-h="350">
-            <div class="cmc-num">Model 05</div>
-            <div class="cmc-name">Cradle</div>
-            <div class="cmc-dims">800 × 400 × 350</div>
-          </div>
-          <div class="config-model-card" data-model="06" data-name="Cradle XL" data-shape="cradle" data-l="1400" data-w="400" data-h="350">
-            <div class="cmc-num">Model 06</div>
-            <div class="cmc-name">Cradle XL</div>
-            <div class="cmc-dims">1400 × 400 × 350</div>
-          </div>
-          <div class="config-model-card" data-model="07" data-name="Monolith" data-shape="monolith" data-l="250" data-w="200" data-h="1600">
-            <div class="cmc-num">Model 07</div>
-            <div class="cmc-name">Monolith</div>
-            <div class="cmc-dims">250 × 200 × 1600</div>
-          </div>
-          <div class="config-model-card" data-model="08" data-name="Prism" data-shape="rect" data-l="700" data-w="400" data-h="350">
-            <div class="cmc-num">Model 08</div>
-            <div class="cmc-name">Prism</div>
-            <div class="cmc-dims">700 × 400 × 350</div>
-          </div>
-          <div class="config-model-card" data-model="09" data-name="Wave" data-shape="rect" data-l="900" data-w="400" data-h="350">
-            <div class="cmc-num">Model 09</div>
-            <div class="cmc-name">Wave</div>
-            <div class="cmc-dims">900 × 400 × 350</div>
-          </div>
-          <div class="config-model-card" data-model="10" data-name="Bowl" data-shape="bowl" data-l="550" data-w="550" data-h="150">
-            <div class="cmc-num">Model 10</div>
-            <div class="cmc-name">Bowl</div>
-            <div class="cmc-dims">∅ 550 · v 150</div>
-          </div>
-          <div class="config-model-card" data-model="11" data-name="Lake" data-shape="bowl" data-l="650" data-w="650" data-h="120">
-            <div class="cmc-num">Model 11</div>
-            <div class="cmc-name">Lake</div>
-            <div class="cmc-dims">∅ 650</div>
-          </div>
-          <div class="config-model-card" data-model="custom" data-name="Zakázkový" data-shape="rect" data-l="1000" data-w="500" data-h="400">
-            <div class="cmc-num">Vlastní</div>
-            <div class="cmc-name">Zakázkový</div>
-            <div class="cmc-dims">libovolné rozměry</div>
-          </div>
-        </div>
-        <div class="config-btn-row">
-          <button class="btn-config-next" id="configNext1" disabled>Pokračovat →</button>
-        </div>
-      </div>
-
-      <!-- ── KROK 2: Rozměry ── -->
-      <div class="config-panel" id="configPanel2">
-        <div class="config-dims-layout">
-          <div class="config-inputs">
-            <h3 id="configModelTitle">Table M</h3>
-            <div class="config-selected-model" id="configModelSub">Model 02 — upravte rozměry dle vašich představ</div>
-
-            <div id="configFieldsRect">
-              <div class="config-field">
-                <label for="cfgLength">Délka</label>
-                <input type="number" id="cfgLength" min="100" max="5000" step="10" value="800" />
-                <div class="field-unit">mm</div>
-              </div>
-              <div class="config-field">
-                <label for="cfgWidth">Šířka</label>
-                <input type="number" id="cfgWidth" min="100" max="3000" step="10" value="400" />
-                <div class="field-unit">mm</div>
-              </div>
-              <div class="config-field">
-                <label for="cfgHeight">Výška</label>
-                <input type="number" id="cfgHeight" min="100" max="3000" step="10" value="380" />
-                <div class="field-unit">mm</div>
-              </div>
-            </div>
-
-            <div id="configFieldsBowl" style="display:none;">
-              <div class="config-field">
-                <label for="cfgDiam">Průměr</label>
-                <input type="number" id="cfgDiam" min="200" max="2000" step="10" value="550" />
-                <div class="field-unit">mm</div>
-              </div>
-              <div class="config-field">
-                <label for="cfgBowlH">Výška</label>
-                <input type="number" id="cfgBowlH" min="50" max="500" step="10" value="150" />
-                <div class="field-unit">mm</div>
-              </div>
-            </div>
-
-            <div class="config-btn-row">
-              <button class="btn-config-back" id="configBack2">← Zpět</button>
-              <button class="btn-config-next" id="configNext2">Zobrazit souhrn →</button>
-            </div>
-          </div>
-
-          <!-- SVG živý náhled -->
-          <div class="config-svg-wrap">
-            <svg id="configSVG" viewBox="0 0 360 260" xmlns="http://www.w3.org/2000/svg">
-              <!-- vygeneruje JS -->
-            </svg>
-            <div class="config-svg-label" id="configSvgLabel">Proporcionální nákres — boční pohled</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── KROK 3: Souhrn ── -->
-      <div class="config-panel" id="configPanel3">
-        <div class="config-summary-grid">
-          <div class="config-summary-box highlight">
-            <div class="csb-label">Model</div>
-            <div class="csb-value" id="sumModel">—</div>
-            <div class="csb-unit" id="sumModelNum">—</div>
-          </div>
-          <div class="config-summary-box" id="sumBoxL">
-            <div class="csb-label">Délka</div>
-            <div class="csb-value" id="sumLength">—</div>
-            <div class="csb-unit">mm</div>
-          </div>
-          <div class="config-summary-box" id="sumBoxW">
-            <div class="csb-label">Šířka</div>
-            <div class="csb-value" id="sumWidth">—</div>
-            <div class="csb-unit">mm</div>
-          </div>
-          <div class="config-summary-box" id="sumBoxH">
-            <div class="csb-label">Výška</div>
-            <div class="csb-value" id="sumHeight">—</div>
-            <div class="csb-unit">mm</div>
-          </div>
-          <div class="config-summary-box" id="sumBoxArea">
-            <div class="csb-label">Plocha podstavy</div>
-            <div class="csb-value" id="sumArea">—</div>
-            <div class="csb-unit">cm²</div>
-          </div>
-          <div class="config-summary-box" id="sumBoxDiam" style="display:none;">
-            <div class="csb-label">Průměr</div>
-            <div class="csb-value" id="sumDiam">—</div>
-            <div class="csb-unit">mm</div>
-          </div>
-        </div>
-
-        <div class="config-inquiry-bar">
-          <div>
-            <strong>Připraveno k poptávce</strong>
-            Vaše konfigurace bude předvyplněna do poptávkového formuláře.
-          </div>
-          <button class="btn-config-inquiry" id="configInquiryBtn">Poptat tuto konfiguraci →</button>
-        </div>
-
-        <div class="config-btn-row">
-          <button class="btn-config-back" id="configBack3">← Upravit rozměry</button>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ─── KONTAKT ───────────────────────────────────────────────── -->
-  <section class="contact-section" id="kontakt">
-    <div class="section-header">
-      <span class="section-label">Poptávka</span>
-      <h2 class="section-title">Nezávazná<br /><em>poptávka</em></h2>
-      <div class="section-rule"></div>
-    </div>
-
-    <div class="contact-inner">
-      <div class="form-success" id="formSuccess">
-        <div class="form-success-icon">✦</div>
-        <h3>Zpráva odeslána</h3>
-        <p>Ozveme se vám do 2 pracovních dnů na váš e-mail.</p>
-      </div>
-
-      <form id="contactForm" novalidate>
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="name">Jméno a příjmení *</label>
-            <input type="text" id="name" name="name" placeholder="Jan Novák" required />
-          </div>
-          <div class="form-group">
-            <label for="email">E-mail *</label>
-            <input type="email" id="email" name="email" placeholder="jan@novak.cz" required />
-          </div>
-          <div class="form-group">
-            <label for="phone">Telefon</label>
-            <input type="tel" id="phone" name="phone" placeholder="+420 600 000 000" />
-          </div>
-          <div class="form-group">
-            <label for="model">Model</label>
-            <select id="model" name="model">
-              <option value="" disabled selected>Vyberte model…</option>
-              <option value="01">Model 01 — Table S</option>
-              <option value="02">Model 02 — Table M</option>
-              <option value="03">Model 03 — Table L</option>
-              <option value="04">Model 04 — Table XL</option>
-              <option value="05">Model 05 — Cradle</option>
-              <option value="06">Model 06 — Cradle XL</option>
-              <option value="07">Model 07 — Monolith</option>
-              <option value="08">Model 08 — Prism</option>
-              <option value="09">Model 09 — Wave</option>
-              <option value="10">Model 10 — Bowl</option>
-              <option value="11">Model 11 — Lake</option>
-              <option value="custom">Zakázkový rozměr</option>
-            </select>
-          </div>
-          <div class="form-group full">
-            <label for="message">Zpráva *</label>
-            <textarea id="message" name="message" placeholder="Popis projektu, počet kusů, zakázkové rozměry…" required></textarea>
-          </div>
-        </div>
-
-        <p class="form-note">
-          Všechny ceny jsou na vyžádání. Odpovídáme do 2 pracovních dnů.
-          Zakázkové rozměry rádi zpracujeme na základě vašich podkladů.
-        </p>
-
-        <div class="form-submit">
-          <button type="submit" class="btn-submit">Odeslat poptávku</button>
-          <a href="mailto:info@viridis.cz" class="form-email-link">info@viridis.cz</a>
-        </div>
+        <button type="submit" class="fsub">Odeslat poptávku →</button>
+        <p class="fnote">Odesláním souhlasíte se zpracováním osobních údajů za účelem vyřízení poptávky.</p>
       </form>
+      <div class="fsuccess" id="mainSuccess">
+        <div style="font-size:2rem;margin-bottom:.5rem">✓</div>
+        <h3 style="color:var(--white);font-family:'Playfair Display',serif;margin-bottom:.4rem">Odesláno!</h3>
+        <p style="color:var(--grey);font-size:.86rem">Ozveme se do 24 hodin v pracovní dny.</p>
+      </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ─── FOOTER ────────────────────────────────────────────────── -->
-  <footer>
-    <a href="#top" class="footer-logo">Vir<span>id</span>is</a>
-    <ul class="footer-links">
-      <li><a href="#skleniky">Skleníky</a></li>
-      <li><a href="#misy">Mísy</a></li>
-      <li><a href="#o-znacce">O značce</a></li>
-      <li><a href="#kontakt">Kontakt</a></li>
-      <li><a href="mailto:info@viridis.cz">info@viridis.cz</a></li>
-    </ul>
-    <p class="footer-copy">© 2025 VIRIDIS · viridis.cz · Czech Made</p>
-  </footer>
+</div><!-- /page-home -->
 
-  <!-- ─── SCRIPTS ───────────────────────────────────────────────── -->
-  <script>
-    // Image placeholder fallback
-    function placeholderHTML(filename) {
-      return `<div class="img-placeholder">
-        <svg class="img-placeholder-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="4" y="4" width="40" height="40" rx="2" stroke="#c9a96e" stroke-width="1.5"/>
-          <path d="M4 32l10-10 8 8 8-10 14 14" stroke="#c9a96e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="16" cy="18" r="3" stroke="#c9a96e" stroke-width="1.5"/>
-        </svg>
-        <span class="img-placeholder-name">${filename}</span>
-      </div>`;
-    }
+<!-- ════════════ OBCHODNÍ PODMÍNKY ════════════ -->
+<div class="page" id="page-terms">
+  <div class="terms-wrap">
+    <a href="#" class="back-link" onclick="showPage('home');return false">← Zpět na hlavní stránku</a>
+    <h1>Obchodní podmínky</h1>
+    <p>Tyto podmínky upravují práva a povinnosti smluvních stran v souladu s § 1751 odst. 1 zák. č. 89/2012 Sb., občanský zákoník.</p>
+    <h2>I. Základní ustanovení</h2>
+    <p>Prodávající provozuje sklenářství pod obchodním označením Sklo Leopold. Kontakt: info@sklarnaleopold.cz, tel. 777 716 326. Kupní smlouva vzniká potvrzením poptávky ze strany prodávajícího.</p>
+    <h2>II. Ceny a platba</h2>
+    <p>Orientační ceny jsou uvedeny na stránkách. Finální cena je stanovena individuálně dle přesných rozměrů, materiálu a opracování a sdělena v cenové nabídce. Platba: bankovní převod, dobírka nebo hotově při osobním odběru.</p>
+    <h2>III. Dodací podmínky</h2>
+    <p>Dodáváme po celé ČR kurýrní službou nebo vlastním závozem. Na zboží vyráběné na míru dle přání zákazníka se zákonná lhůta pro odstoupení od smlouvy nevztahuje dle § 1837 písm. d) OZ.</p>
+    <h2>IV. Reklamace a záruky</h2>
+    <p>Záruční lhůta je 24 měsíců od převzetí zboží. Reklamace uplatňujte na info@sklarnaleopold.cz nebo tel. 777 716 326. Reklamaci vyřídíme do 30 dnů od obdržení.</p>
+    <h2>V. Ochrana osobních údajů (GDPR)</h2>
+    <p>Osobní údaje (jméno, e-mail, telefon) zpracováváme výlučně za účelem vyřízení poptávky a objednávky v souladu s Nařízením EU 2016/679. Údaje nejsou předávány třetím stranám. Na požádání údaje vymažeme.</p>
+    <h2>VI. Řešení sporů</h2>
+    <p>K mimosoudnímu řešení spotřebitelských sporů je příslušná Česká obchodní inspekce (www.coi.cz). Online platforma: ec.europa.eu/consumers/odr.</p>
+  </div>
+</div>
 
-    // Apply placeholders to broken images
-    document.querySelectorAll('.product-img img').forEach(img => {
-      img.addEventListener('error', function() {
-        const src = this.getAttribute('src');
-        this.parentElement.innerHTML = placeholderHTML(src);
-      });
-    });
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a class="nav-logo" href="#" onclick="showPage('home');return false">
+        <img src="images/logo.png" alt="" onerror="this.style.display='none'">
+        <span>Sklo <em>Leopold</em></span>
+      </a>
+      <p>Sklenářství s tradicí — skla a zrcadla na míru pro domácnosti i firmy po celé České republice.</p>
+    </div>
+    <div class="footer-col"><h4>Produkty</h4><ul>
+      <li><a href="#katalog" onclick="setTab('cira')">Čirá skla</a></li>
+      <li><a href="#katalog" onclick="setTab('ornamentni')">Ornamentní skla</a></li>
+      <li><a href="#katalog" onclick="setTab('esg')">Bezpečnostní ESG</a></li>
+      <li><a href="#katalog" onclick="setTab('vsg')">Vrstvená VSG</a></li>
+      <li><a href="#katalog" onclick="setTab('vsg-esg')">VSG+ESG</a></li>
+      <li><a href="#katalog" onclick="setTab('zrcadla')">Zrcadla</a></li>
+      <li><a href="#katalog" onclick="setTab('krbove')">Krbové sklo</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Informace</h4><ul>
+      <li><a href="#jak">Jak objednat</a></li>
+      <li><a href="#sluzby">Opracování skla</a></li>
+      <li><a href="#" onclick="showPage('terms');return false">Obchodní podmínky</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Kontakt</h4><ul>
+      <li><a href="tel:777716326">777 716 326</a></li>
+      <li><a href="mailto:info@sklarnaleopold.cz">info@sklarnaleopold.cz</a></li>
+      <li><a href="#kontakt">Poptávkový formulář</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Sklo Leopold. Všechna práva vyhrazena.</p>
+    <a href="#" onclick="showPage('terms');return false">Obchodní podmínky</a>
+  </div>
+</footer>
 
-    // Navbar burger
-    const burger = document.getElementById('navBurger');
-    const navLinks = document.getElementById('navLinks');
-    burger.addEventListener('click', () => {
-      navLinks.classList.toggle('open');
-    });
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="mbox">
+    <button class="mclose" onclick="closeModal()">×</button>
+    <div class="mtitle">Poptávka produktu</div>
+    <div class="mproduct" id="mProductName"></div>
+    <form id="modalForm" action="https://formspree.io/f/mkoqjgpz" method="POST">
+      <input type="hidden" name="_subject" value="Poptávka ze skloleopold.cz">
+      <input type="hidden" name="produkt_kód" id="mProductInput">
+      <div class="frow">
+        <div class="fg"><label>Jméno *</label><input type="text" name="jmeno" required placeholder="Jan Novák"></div>
+        <div class="fg"><label>Telefon</label><input type="tel" name="telefon" placeholder="777 000 000"></div>
+      </div>
+      <div class="fg"><label>E-mail *</label><input type="email" name="email" required placeholder="vas@email.cz"></div>
+      <div class="fg"><label>Rozměry a poznámky</label><textarea name="zprava" placeholder="Rozměr, počet kusů, opracování…"></textarea></div>
+      <button type="submit" class="fsub">Odeslat poptávku →</button>
+    </form>
+  </div>
+</div>
 
-    // Close nav on link click (mobile)
-    navLinks.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => navLinks.classList.remove('open'));
-    });
+<script>
+// ══════════════════════════════════════════════════
+// KOMPLETNÍ DATABÁZE PRODUKTŮ
+// ══════════════════════════════════════════════════
+const DB = {
+  cira: {
+    label: 'Čirá skla',
+    desc: 'Průhledné float sklo různých tlouštěk. Vhodné pro zasklívání oken, dveří, polic, stolů a příček. Každý kus řezán přesně na míru.',
+    img: 'images/cire_sklo.jpg',
+    fb: 'linear-gradient(135deg,#b8ccd8,#90aec0)',
+    subcats: [{
+      title: null, note: null,
+      products: [
+        {n:'Float sklo Čiré 2 mm', s:'Síla 2 mm • Pro zasklívání obrazů a rámů', p:'520 Kč'},
+        {n:'Float sklo Čiré 3 mm', s:'Síla 3 mm • Zasklívání okenních výplní', p:'480 Kč'},
+        {n:'Float sklo Čiré 4 mm', s:'Síla 4 mm • Okna, dveřní výplně', p:'550 Kč'},
+        {n:'Float sklo Čiré 5 mm', s:'Síla 5 mm • Dvířka, méně zatížené police, stolové sklo', p:'710 Kč'},
+        {n:'Float sklo Čiré 6 mm', s:'Síla 6 mm • Dveře, zatížené police, krycí sklo na stoly', p:'830 Kč'},
+        {n:'Float sklo Čiré 8 mm', s:'Síla 8 mm • Dvířka, zatížené police a stoly', p:'1 180 Kč'},
+        {n:'Float sklo Čiré 10 mm', s:'Síla 10 mm • Skleněná dvířka, zatížené police', p:'1 650 Kč'},
+        {n:'Float sklo Čiré 12 mm', s:'Síla 12 mm • Exteriérové a interiérové stěny, příčky', p:'1 850 Kč'},
+      ]
+    }]
+  },
 
-    // Scroll animation
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+  ornamentni: {
+    label: 'Ornamentní skla',
+    desc: 'Jednostranně vzorované ploché sklo. Snižuje průhlednost, používá se k dekorativním dělicím příčkám, zasklívání dveří, výtahů nebo jako vnitřní / vnější zasklení budov.',
+    img: 'images/ornament_silvit.jpg',
+    fb: 'linear-gradient(135deg,#c8d8e0,#a0b8c8)',
+    subcats: [{
+      title: null, note: null,
+      products: [
+        {n:'Silvit čirý',         s:'Ornamentní sklo čiré • Síla 4 mm', p:'750 Kč', img:'images/ornament_silvit.jpg'},
+        {n:'Kůra (Tráva) čirá',   s:'Ornamentní sklo čiré • Síla 4 mm', p:'750 Kč', img:'images/ornament_kura.jpg'},
+        {n:'Crepi',               s:'Ornamentní sklo čiré • Síla 4 mm', p:'835 Kč'},
+        {n:'Činčila čirá',        s:'Ornamentní sklo čiré • Síla 4 mm', p:'915 Kč', img:'images/ornament_cincila.jpg'},
+        {n:'Delta čirá',          s:'Ornamentní sklo čiré • Síla 4 mm', p:'1 150 Kč'},
+        {n:'Drátosklo',           s:'Ornamentní sklo s drátěnou výztuží • Síla 4 mm', p:'1 150 Kč', img:'images/ornament_dratosklo.png'},
+        {n:'Master Carre',        s:'Ornamentní sklo čiré • Síla 4 mm', p:'1 430 Kč', img:'images/ornament_master_point.jpg'},
+        {n:'Master Point',        s:'Ornamentní sklo čiré • Síla 4 mm', p:'1 430 Kč', img:'images/ornament_master_point.jpg'},
+        {n:'Altdeutsch čirý',     s:'Ornamentní sklo čiré • Síla 4 mm', p:'1 650 Kč'},
+      ]
+    }]
+  },
 
-    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  piskovani: {
+    label: 'Pískování skla',
+    desc: 'Dekorativní matování a vzory pískováním. Vhodné pro sprchové kouty, dveřní výplně, příčky a interiérové prvky.',
+    img: 'images/ornament_cincila.jpg',
+    fb: 'linear-gradient(135deg,#d0dce4,#b0c4d0)',
+    subcats: [{
+      title: null, note: null,
+      products: [
+        {n:'Pískování – celoplošné matování', s:'Rovnoměrné matování celé plochy • Cena dle rozměru', p:'na dotaz'},
+        {n:'Pískování – dekorativní vzor',    s:'Vlastní nebo připravený vzor • Cena dle složitosti', p:'na dotaz'},
+        {n:'Pískování – kombinovaný efekt',   s:'Kombinace matných a průhledných ploch • Cena dle rozměru', p:'na dotaz'},
+      ]
+    }]
+  },
 
-    // Contact form
-    const form = document.getElementById('contactForm');
-    const success = document.getElementById('formSuccess');
+  esg: {
+    label: 'Bezpečnostní sklo ESG',
+    desc: 'Tepelně kalené sklo – zahřátím na 800 °C a prudkým ochlazením získá sklo až 4× vyšší pevnost. Při rozbití se rozpadá na drobné tupé střípky – bezpečné pro osoby. Používá se pro dveře, sprchové kouty, příčky, zábradlí a nábytek. Pozor: po zakalení nelze dále opracovávat.',
+    img: 'images/bezp_esg.jpg',
+    fb: 'linear-gradient(135deg,#a8c0d0,#80a0b8)',
+    subcats: [{
+      title: null, note: null,
+      products: [
+        {n:'Float 4 mm ESG (kalené)',  s:'Čiré tepelně tvrzené sklo • Síla 4 mm • Dveřní výplně, příčky', p:'2 450 Kč'},
+        {n:'Float 5 mm ESG (kalené)',  s:'Čiré tepelně tvrzené sklo • Síla 5 mm', p:'2 650 Kč'},
+        {n:'Float 6 mm ESG (kalené)',  s:'Čiré tepelně tvrzené sklo • Síla 6 mm • Sprchové kouty, dveře', p:'2 680 Kč'},
+        {n:'Float 8 mm ESG (kalené)',  s:'Čiré tepelně tvrzené sklo • Síla 8 mm', p:'2 950 Kč'},
+        {n:'Float 10 mm ESG (kalené)', s:'Čiré tepelně tvrzené sklo • Síla 10 mm • Příčky, zábradlí', p:'3 350 Kč'},
+        {n:'Float 12 mm ESG (kalené)', s:'Čiré tepelně tvrzené sklo • Síla 12 mm • Strukturální prvky', p:'3 850 Kč'},
+      ]
+    }]
+  },
 
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const name = form.querySelector('#name').value.trim();
-      const email = form.querySelector('#email').value.trim();
-      const message = form.querySelector('#message').value.trim();
-
-      if (!name || !email || !message) {
-        const firstEmpty = !name ? '#name' : !email ? '#email' : '#message';
-        form.querySelector(firstEmpty).focus();
-        form.querySelector(firstEmpty).style.borderColor = 'rgba(201,169,110,0.7)';
-        return;
+  vsg: {
+    label: 'Vrstvená laminovaná skla VSG',
+    desc: 'Dvě skla spojená bezpečnostní PVB nebo EVA fólií (0,38 nebo 0,76 mm). Při rozbití střepy zůstávají přichyceny na fólii – sklo zachovává svůj tvar a je bezpečné i po rozbití. Norma ČSN EN 12600. Max. rozměr laminovací pece: 3000×1500 mm.',
+    img: 'images/bezp_vsg.jpg',
+    fb: 'linear-gradient(135deg,#a0b8c8,#7898b0)',
+    subcats: [
+      {
+        title: 'Čiré VSG (Connex)',
+        note: 'Float + Float spojené čirou PVB/EVA fólií.',
+        products: [
+          {n:'VSG 33.1 (Connex) 6,38 mm',  s:'Float 3+3 mm • Folie EVA 0,38 mm • čiré • ČSN EN 12600 2B2', p:'1 195 Kč'},
+          {n:'VSG 33.2 (Connex) 6,76 mm',  s:'Float 3+3 mm • Folie EVA 0,76 mm • čiré • ČSN EN 356 P2A', p:'1 895 Kč'},
+          {n:'VSG 44.1 (Connex) 8,38 mm',  s:'Float 4+4 mm • Folie PVB 0,38 mm • čiré • ČSN EN 12600 2B2', p:'1 690 Kč'},
+          {n:'VSG 44.2 (Connex) 8,76 mm',  s:'Float 4+4 mm • Folie PVB 0,76 mm • čiré • ČSN EN 356 P2A', p:'1 350 Kč'},
+          {n:'VSG 55.1 (Connex) 10,38 mm', s:'Float 5+5 mm • Folie PVB 0,38 mm • čiré • ČSN EN 12600 1B1', p:'2 215 Kč'},
+          {n:'VSG 55.2 (Connex) 10,76 mm', s:'Float 5+5 mm • Folie PVB 0,76 mm • čiré • ČSN EN 356 P2A', p:'1 650 Kč'},
+          {n:'VSG 66.2 (Connex) 12,76 mm', s:'Float 6+6 mm • Folie PVB 0,76 mm • čiré • ČSN EN 356 P2A', p:'2 450 Kč'},
+          {n:'VSG 88.2 (Connex) 16,76 mm', s:'Float 8+8 mm • Folie PVB 0,76 mm • čiré • ČSN EN 356 P2A', p:'3 650 Kč'},
+        ]
+      },
+      {
+        title: 'Mléčná folie VSG (Connex mléčný)',
+        note: 'Float + Float spojené mléčnou (nepropustnou) fólií – výsledek je polomatné bezpečnostní sklo.',
+        img: 'images/bezp_mlecna.png',
+        products: [
+          {n:'VSG 33.1 mléčná folie 6,38 mm',  s:'Float 3+3 mm • Folie EVA 0,38 mm mléčná', p:'1 760 Kč', img:'images/bezp_mlecna.png'},
+          {n:'VSG 44.1 mléčná folie 8,38 mm',  s:'Float 4+4 mm • Folie PVB 0,38 mm mléčná • ČSN EN 12600 2B2', p:'1 850 Kč', img:'images/bezp_mlecna.png'},
+          {n:'VSG 44.2 mléčná folie 8,76 mm',  s:'Float 4+4 mm • Folie PVB 0,76 mm mléčná • ČSN EN 356 P2A', p:'2 115 Kč', img:'images/bezp_mlecna.png'},
+          {n:'VSG 55.1 mléčná folie 10,38 mm', s:'Float 5+5 mm • Folie PVB 0,38 mm mléčná • ČSN EN 12600 2B2', p:'1 920 Kč', img:'images/bezp_mlecna.png'},
+          {n:'VSG 55.2 mléčná folie 10,76 mm', s:'Float 5+5 mm • Folie PVB 0,76 mm mléčná • ČSN EN 356 P2A', p:'2 380 Kč', img:'images/bezp_mlecna.png'},
+          {n:'VSG 66.2 mléčná folie 12,76 mm', s:'Float 6+6 mm • Folie PVB 0,76 mm matná • ČSN EN 356 P2A', p:'2 850 Kč', img:'images/bezp_mlecna.png'},
+        ]
       }
+    ]
+  },
 
-      // Simulate submission
-      const btn = form.querySelector('.btn-submit');
-      btn.textContent = 'Odesílám…';
-      btn.disabled = true;
+  'vsg-esg': {
+    label: 'Vrstvená kalená skla VSG+ESG',
+    desc: 'Kombinace dvou tepelně tvrzených skel (ESG) spojených bezpečnostní fólií. Nabízí mimořádnou pevnost a zachování zbytkové únosnosti i po rozbití. Ideální pro bodové uchycení, skleněná zábradlí, zastřešení pergol a balkóny.',
+    img: 'images/bezp_esg.jpg',
+    fb: 'linear-gradient(135deg,#98b0c0,#7090a8)',
+    subcats: [
+      {
+        title: 'Čiré VSG+ESG',
+        note: 'ESG + ESG spojené čirou fólií. Tepelně tvrzená skla mají až 5× větší odolnost proti průhybům a nárazům než běžné float sklo.',
+        products: [
+          {n:'VSG 33.2 ESG 6,76 mm',   s:'ESG 3+3 mm • Folie 0,76 mm čirá', p:'3 350 Kč'},
+          {n:'VSG 44.2 ESG 8,76 mm',   s:'ESG 4+4 mm • Folie 0,76 mm čirá', p:'3 850 Kč'},
+          {n:'VSG 55.2 ESG 10,76 mm',  s:'ESG 5+5 mm • Folie 0,76 mm čirá', p:'3 550 Kč'},
+          {n:'VSG 66.2 ESG 12,76 mm',  s:'ESG 6+6 mm • Folie 0,76 mm čirá', p:'3 950 Kč'},
+          {n:'VSG 88.2 ESG 16,76 mm',  s:'ESG 8+8 mm • Folie 0,76 mm čirá', p:'4 550 Kč'},
+          {n:'VSG 1010.2 ESG 20,76 mm',s:'ESG 10+10 mm • Folie 0,76 mm čirá', p:'5 650 Kč'},
+        ]
+      },
+      {
+        title: 'Mléčná folie VSG+ESG',
+        note: 'ESG + ESG spojené mléčnou fólií. Kombinuje bezpečnost, pevnost a polomatný efekt.',
+        img: 'images/bezp_mlecna.png',
+        products: [
+          {n:'VSG 33.2 ESG mléčná fólie 6,76 mm',   s:'ESG 3+3 mm • Folie 0,76 mm mléčná', p:'3 720 Kč', img:'images/bezp_mlecna.png'},
+          {n:'VSG 44.2 ESG mléčná fólie 8,76 mm',   s:'ESG 4+4 mm • Folie 0,76 mm mléčná', p:'4 820 Kč', img:'images/bezp_mlecna.png'},
+          {n:'VSG 55.2 ESG mléčná fólie 10,76 mm',  s:'ESG 5+5 mm • Folie 0,76 mm mléčná', p:'5 220 Kč', img:'images/bezp_mlecna.png'},
+          {n:'VSG 66.2 ESG mléčná fólie 12,76 mm',  s:'ESG 6+6 mm • Folie 0,76 mm mléčná', p:'5 420 Kč', img:'images/bezp_mlecna.png'},
+          {n:'VSG 88.2 ESG mléčná fólie 16,76 mm',  s:'ESG 8+8 mm • Folie 0,76 mm mléčná', p:'5 820 Kč', img:'images/bezp_mlecna.png'},
+          {n:'VSG 1010.2 ESG mléčná fólie 20,76 mm',s:'ESG 10+10 mm • Folie 0,76 mm mléčná', p:'7 120 Kč', img:'images/bezp_mlecna.png'},
+        ]
+      }
+    ]
+  },
 
-      setTimeout(() => {
+  zrcadla: {
+    label: 'Zrcadla',
+    desc: 'Stříbrná i bronzová zrcadla přesně na míru. Různé tloušťky, možnost broušení hran a vrtání otvorů. Vhodné pro koupelny, šatny, obývací pokoje a interiérový design.',
+    img: 'images/zrcadlo.jpg',
+    fb: 'linear-gradient(135deg,#c8cdd0,#a0a8b0)',
+    subcats: [{
+      title: null, note: null,
+      products: [
+        {n:'Zrcadlo 3 mm', s:'Klasické stříbrné zrcadlo • Síla 3 mm • Pro nalepení na lehké podklady', p:'720 Kč', img:'images/zrcadlo.jpg'},
+        {n:'Zrcadlo 4 mm', s:'Klasické stříbrné zrcadlo • Síla 4 mm • Nejběžnější — zeď, posuvné stěny', p:'780 Kč', img:'images/zrcadlo.jpg'},
+        {n:'Zrcadlo 5 mm', s:'Klasické stříbrné zrcadlo • Síla 5 mm', p:'1 175 Kč', img:'images/zrcadlo.jpg'},
+        {n:'Zrcadlo Bronz 4 mm', s:'Bronzové zrcadlo • Síla 4 mm • Dekorativní teplý tón', p:'1 210 Kč', img:'images/zrcadlo_bronz.jpg'},
+      ]
+    }]
+  },
+
+  krbove: {
+    label: 'Krbové sklo',
+    desc: 'Keramické žáruvzdorné sklo pro krby, krbová kamna a halogenové lampy. Odolnost do 800 °C. Tloušťka 4 mm. Řežeme na přesný rozměr.',
+    img: 'images/krbove.png',
+    fb: 'linear-gradient(135deg,#c0a888,#a08060)',
+    subcats: [{
+      title: null, note: null,
+      products: [
+        {n:'Keramické sklo (krbové)', s:'Žáruvzdorné keramické sklo • Síla 4 mm • Odolnost do 800 °C • Krby, kamna, halogenové lampy', p:'7 500 Kč', img:'images/krbove.png'},
+      ]
+    }]
+  },
+
+  vyrobky: {
+    label: 'Výrobky ze skla',
+    desc: 'Náhradní ochranná skla a specializované výrobky.',
+    img: 'images/prilby.png',
+    fb: 'linear-gradient(135deg,#c8d0d8,#a0b0b8)',
+    subcats: [{
+      title: null, note: null,
+      products: [
+        {n:'Náhradní skla do tryskacích přileb', s:'Ochranná skla pro tryskací přilby • Standardní formáty skladem', p:'od 9 Kč/ks', img:'images/prilby.png'},
+      ]
+    }]
+  }
+};
+
+// ══════════════════════════════════════════════════
+// CATALOG RENDERING
+// ══════════════════════════════════════════════════
+const TABS = [
+  {id:'all',        label:'Vše'},
+  {id:'cira',       label:'Čirá skla'},
+  {id:'ornamentni', label:'Ornamentní'},
+  {id:'piskovani',  label:'Pískování'},
+  {id:'esg',        label:'ESG – kalené'},
+  {id:'vsg',        label:'VSG – lepené'},
+  {id:'vsg-esg',    label:'VSG+ESG – kalené+lepené'},
+  {id:'zrcadla',    label:'Zrcadla'},
+  {id:'krbove',     label:'Krbové sklo'},
+  {id:'vyrobky',    label:'Výrobky ze skla'},
+];
+
+let activeTab = 'all';
+
+function setTab(id) {
+  activeTab = id;
+  renderTabs();
+  renderContent();
+  setTimeout(()=>document.getElementById('katalog').scrollIntoView({behavior:'smooth'}), 50);
+}
+
+function renderTabs() {
+  document.getElementById('catTabs').innerHTML = TABS.map(t =>
+    `<button class="ctab${t.id===activeTab?' active':''}" onclick="setTab('${t.id}')">${t.label}</button>`
+  ).join('');
+}
+
+function pImg(p, cat) {
+  const src = p.img || cat.img;
+  const fb  = cat.fb;
+  return `<div class="pcard-img" style="background:${fb}"><img src="${src}" alt="${p.n}" loading="lazy" onerror="this.style.display='none'"></div>`;
+}
+
+function renderProducts(products, cat) {
+  return `<div class="pgrid">${products.map(p => `
+    <div class="pcard reveal">
+      ${pImg(p, cat)}
+      <div class="pcard-body">
+        <div class="pcard-name">${p.n}</div>
+        <div class="pcard-spec">${p.s}</div>
+        <div class="pcard-foot">
+          <div class="pcard-price">${p.p}<span class="pcard-unit">orient. cena/m²</span></div>
+          <button class="btn-poptavka" onclick="openModal('${p.n.replace(/'/g,"\\'")}')">Poptávka</button>
+        </div>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+function renderCatFull(id, cat) {
+  const subcatsHtml = cat.subcats.map(sc => `
+    ${sc.title ? `<div class="subcat-section">
+      <div class="subcat-name">${sc.title}</div>
+      ${sc.note ? `<div class="subcat-note">${sc.note}</div>` : ''}
+    </div>` : ''}
+    ${renderProducts(sc.products, {img: (sc.img||cat.img), fb: cat.fb})}
+  `).join('');
+  return `
+    <div class="cat-page-header">
+      <div class="cat-page-title">${cat.label}</div>
+      <div class="cat-page-desc">${cat.desc}</div>
+    </div>
+    ${subcatsHtml}
+  `;
+}
+
+function renderAllView() {
+  return Object.entries(DB).map(([id, cat]) => {
+    // In "all" view show only first 4 products from first subcat
+    const preview = cat.subcats[0].products.slice(0,4);
+    return `
+      <div class="all-cat-block">
+        <div class="all-cat-title-row">
+          <div>
+            <div class="all-cat-name">${cat.label}</div>
+            <div class="all-cat-desc">${cat.desc.substring(0,120)}${cat.desc.length>120?'…':''}</div>
+          </div>
+          <button class="show-all-btn" onclick="setTab('${id}')">Zobrazit vše →</button>
+        </div>
+        ${renderProducts(preview, cat)}
+      </div>
+    `;
+  }).join('');
+}
+
+function renderContent() {
+  const wrap = document.getElementById('catContent');
+  if (activeTab === 'all') {
+    wrap.innerHTML = renderAllView();
+  } else {
+    const cat = DB[activeTab];
+    wrap.innerHTML = cat ? renderCatFull(activeTab, cat) : '';
+  }
+  observeReveal();
+}
+
+// ══════════════════════════════════════════════════
+// MODAL
+// ══════════════════════════════════════════════════
+function openModal(name) {
+  document.getElementById('mProductName').textContent = name;
+  document.getElementById('mProductInput').value = name;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modalOverlay')) {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+
+// ══════════════════════════════════════════════════
+// FORM HANDLING
+// ══════════════════════════════════════════════════
+function setupForm(formId, successId) {
+  const form = document.getElementById(formId);
+  if (!form) return;
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = form.querySelector('.fsub');
+    btn.textContent = 'Odesílám…'; btn.disabled = true;
+    try {
+      const res = await fetch(form.action, {method:'POST', body:new FormData(form), headers:{Accept:'application/json'}});
+      if (res.ok) {
         form.style.display = 'none';
-        success.classList.add('visible');
-      }, 800);
-    });
+        const s = document.getElementById(successId);
+        if (s) s.style.display = 'block';
+        if (formId === 'modalForm') setTimeout(closeModal, 2000);
+      } else { btn.textContent = 'Chyba – zkuste znovu'; btn.disabled = false; }
+    } catch { btn.textContent = 'Chyba – zkuste znovu'; btn.disabled = false; }
+  });
+}
 
-    // Reset input highlight on change
-    form.querySelectorAll('input, textarea').forEach(el => {
-      el.addEventListener('input', () => {
-        el.style.borderColor = '';
-      });
-    });
+// ══════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════
+function observeReveal() {
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target);} });
+  }, {threshold:.08});
+  document.querySelectorAll('.reveal:not(.vis)').forEach(el => io.observe(el));
+}
 
-    document.querySelectorAll('.product-card').forEach(card => {
-      card.addEventListener('click', () => {
-        document.getElementById('kontakt').scrollIntoView({ behavior: 'smooth' });
-      });
-    });
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  window.scrollTo(0,0);
+}
 
-    // ─── KONFIGURÁTOR ────────────────────────────────────────────────
-    (function() {
-      let selectedModel = null;
-      let currentShape = 'rect';
+function toggleMenu() { document.getElementById('navLinks').classList.toggle('open'); }
+function closeMobile() { document.getElementById('navLinks').classList.remove('open'); }
 
-      const panels = [null,
-        document.getElementById('configPanel1'),
-        document.getElementById('configPanel2'),
-        document.getElementById('configPanel3')
-      ];
-      const stepEls = [null,
-        document.getElementById('cstep1'),
-        document.getElementById('cstep2'),
-        document.getElementById('cstep3')
-      ];
-
-      function showPanel(n) {
-        panels.forEach((p, i) => { if (p) p.classList.toggle('active', i === n); });
-        stepEls.forEach((s, i) => {
-          if (!s) return;
-          s.classList.toggle('active', i === n);
-          s.classList.toggle('done', i < n);
-        });
-      }
-
-      // Step 1 — model selection
-      document.querySelectorAll('.config-model-card').forEach(card => {
-        card.addEventListener('click', function() {
-          document.querySelectorAll('.config-model-card').forEach(c => c.classList.remove('selected'));
-          this.classList.add('selected');
-          selectedModel = {
-            model: this.dataset.model,
-            name: this.dataset.name,
-            shape: this.dataset.shape,
-            l: parseInt(this.dataset.l),
-            w: parseInt(this.dataset.w),
-            h: parseInt(this.dataset.h)
-          };
-          document.getElementById('configNext1').disabled = false;
-        });
-      });
-
-      document.getElementById('configNext1').addEventListener('click', function() {
-        if (!selectedModel) return;
-        prepareStep2();
-        showPanel(2);
-      });
-
-      function prepareStep2() {
-        const m = selectedModel;
-        document.getElementById('configModelTitle').textContent = m.name;
-        document.getElementById('configModelSub').textContent =
-          m.model === 'custom'
-            ? 'Zakázkový model — zadejte požadované rozměry'
-            : 'Model ' + m.model.padStart(2,'0') + ' — upravte rozměry dle vašich představ';
-
-        currentShape = m.shape;
-        const isBowl = m.shape === 'bowl';
-        document.getElementById('configFieldsRect').style.display = isBowl ? 'none' : 'block';
-        document.getElementById('configFieldsBowl').style.display = isBowl ? 'block' : 'none';
-
-        if (isBowl) {
-          document.getElementById('cfgDiam').value = m.l;
-          document.getElementById('cfgBowlH').value = m.h;
-        } else {
-          document.getElementById('cfgLength').value = m.l;
-          document.getElementById('cfgWidth').value = m.w;
-          document.getElementById('cfgHeight').value = m.h;
-        }
-        updateSVG();
-      }
-
-      document.getElementById('configBack2').addEventListener('click', () => showPanel(1));
-
-      document.getElementById('configNext2').addEventListener('click', () => {
-        buildSummary();
-        showPanel(3);
-      });
-
-      document.getElementById('configBack3').addEventListener('click', () => showPanel(2));
-
-      // Live SVG update
-      ['cfgLength','cfgWidth','cfgHeight','cfgDiam','cfgBowlH'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener('input', updateSVG);
-      });
-
-      function getDims() {
-        if (currentShape === 'bowl') {
-          const d = parseInt(document.getElementById('cfgDiam').value) || 550;
-          const h = parseInt(document.getElementById('cfgBowlH').value) || 150;
-          return { l: d, w: d, h, diam: d };
-        }
-        return {
-          l: parseInt(document.getElementById('cfgLength').value) || 800,
-          w: parseInt(document.getElementById('cfgWidth').value) || 400,
-          h: parseInt(document.getElementById('cfgHeight').value) || 380
-        };
-      }
-
-      function updateSVG() {
-        const svg = document.getElementById('configSVG');
-        const dims = getDims();
-        const shape = currentShape;
-
-        // Canvas
-        const VW = 360, VH = 260;
-        const PAD = 36;
-        const drawW = VW - PAD * 2;
-        const drawH = VH - PAD * 2 - 20; // leave room for bottom label
-
-        let content = '';
-
-        if (shape === 'bowl') {
-          // Top view: ellipse + side profile below
-          const maxR = Math.min(drawW, drawH * 0.55) / 2;
-          const rRatio = Math.min(1, dims.diam / 700);
-          const r = 24 + (maxR - 24) * rRatio;
-          const cx = VW / 2;
-          const cy = PAD + drawH * 0.38;
-
-          const heightRatio = Math.min(1, dims.h / 300);
-          const hPx = 8 + (40 - 8) * heightRatio;
-          const profileY = cy + r + 12;
-
-          content = `
-            <ellipse cx="${cx}" cy="${cy}" rx="${r}" ry="${r * 0.38}"
-              fill="none" stroke="var(--gold)" stroke-width="1.5"/>
-            <ellipse cx="${cx}" cy="${cy}" rx="${r * 0.55}" ry="${r * 0.22}"
-              fill="none" stroke="var(--gold)" stroke-width="0.75" stroke-dasharray="4,3"/>
-            <line x1="${cx - r}" y1="${profileY}" x2="${cx + r}" y2="${profileY}"
-              stroke="var(--gold)" stroke-width="1.5"/>
-            <path d="M${cx - r} ${profileY} Q${cx - r * 1.05} ${profileY + hPx * 0.6} ${cx - r * 0.7} ${profileY + hPx}
-              L${cx + r * 0.7} ${profileY + hPx} Q${cx + r * 1.05} ${profileY + hPx * 0.6} ${cx + r} ${profileY}"
-              fill="rgba(160,120,40,0.04)" stroke="var(--gold)" stroke-width="1.5"/>
-            <line x1="${cx - r}" y1="${profileY + hPx + 14}" x2="${cx + r}" y2="${profileY + hPx + 14}"
-              stroke="var(--gold)" stroke-width="0.75" marker-start="url(#arr)" marker-end="url(#arr)"/>
-            <text x="${cx}" y="${profileY + hPx + 24}" text-anchor="middle"
-              font-family="Inter,sans-serif" font-size="9" fill="var(--muted)">∅ ${dims.diam} mm</text>
-          `;
-          document.getElementById('configSvgLabel').textContent = 'Pohled shora + boční profil';
-
-        } else if (shape === 'monolith') {
-          const l = dims.l, h = dims.h;
-          const scale = Math.min((drawW * 0.4) / l, drawH / h);
-          const rW = Math.max(20, l * scale);
-          const rH = Math.min(drawH, h * scale);
-          const x = (VW - rW) / 2;
-          const y = PAD + (drawH - rH) / 2;
-
-          content = buildRectSVG(x, y, rW, rH, dims, 'monolith');
-          document.getElementById('configSvgLabel').textContent = 'Proporcionální nákres — přední pohled';
-
-        } else {
-          // rect / cradle
-          const l = dims.l, h = dims.h, w = dims.w;
-          const iso = 0.28; // skew factor for depth illusion
-          const depthPx = Math.min(30, (w / l) * 60);
-
-          const scale = Math.min(
-            (drawW - depthPx) / l,
-            (drawH - depthPx) / h
-          );
-          const rW = l * scale;
-          const rH = h * scale;
-          const dep = depthPx;
-
-          const x0 = PAD + (drawW - rW - dep) / 2;
-          const y0 = PAD + dep + (drawH - rH - dep) / 2;
-
-          // Front face
-          const frontPath = `M${x0} ${y0} h${rW} v${rH} h${-rW} Z`;
-          // Top face
-          const topPath = `M${x0} ${y0} l${dep} ${-dep} h${rW} l${-dep} ${dep} Z`;
-          // Right face
-          const rightPath = `M${x0 + rW} ${y0} l${dep} ${-dep} v${rH} l${-dep} ${dep} Z`;
-
-          // Cradle legs
-          let legs = '';
-          if (shape === 'cradle') {
-            const legH = rH * 0.18;
-            const legW = rW * 0.06;
-            const legY = y0 + rH;
-            legs = `
-              <rect x="${x0 + rW * 0.12}" y="${legY}" width="${legW}" height="${legH}"
-                fill="rgba(160,120,40,0.12)" stroke="var(--gold)" stroke-width="1"/>
-              <rect x="${x0 + rW * 0.82}" y="${legY}" width="${legW}" height="${legH}"
-                fill="rgba(160,120,40,0.12)" stroke="var(--gold)" stroke-width="1"/>
-            `;
-          }
-
-          // Arch line on front face (glass curve)
-          const archMid = y0 + rH * 0.18;
-          const archPath = `M${x0 + rW * 0.05} ${y0 + rH * 0.3} Q${x0 + rW * 0.5} ${archMid} ${x0 + rW * 0.95} ${y0 + rH * 0.3}`;
-
-          // Dimension labels
-          // Width arrow (bottom)
-          const arrY = y0 + rH + (shape === 'cradle' ? rH * 0.25 : 20);
-          // Height arrow (right side)
-          const arrX = x0 + rW + dep + 14;
-
-          content = `
-            <defs>
-              <marker id="arrC" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-                <path d="M0,0 L6,3 L0,6" fill="none" stroke="var(--gold)" stroke-width="1"/>
-              </marker>
-              <marker id="arrC2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse">
-                <path d="M0,0 L6,3 L0,6" fill="none" stroke="var(--gold)" stroke-width="1"/>
-              </marker>
-            </defs>
-            <path d="${rightPath}" fill="rgba(160,120,40,0.06)" stroke="var(--gold)" stroke-width="1"/>
-            <path d="${topPath}" fill="rgba(160,120,40,0.1)" stroke="var(--gold)" stroke-width="1"/>
-            <path d="${frontPath}" fill="rgba(160,120,40,0.04)" stroke="var(--gold)" stroke-width="1.5"/>
-            <path d="${archPath}" fill="none" stroke="var(--gold-dim)" stroke-width="0.75" stroke-dasharray="5,3"/>
-            ${legs}
-            <line x1="${x0}" y1="${arrY}" x2="${x0 + rW}" y2="${arrY}"
-              stroke="var(--gold)" stroke-width="0.75"
-              marker-start="url(#arrC2)" marker-end="url(#arrC)"/>
-            <text x="${x0 + rW / 2}" y="${arrY + 11}" text-anchor="middle"
-              font-family="Inter,sans-serif" font-size="9" fill="var(--muted)">${dims.l} mm</text>
-            <line x1="${arrX}" y1="${y0}" x2="${arrX}" y2="${y0 + rH}"
-              stroke="var(--gold)" stroke-width="0.75"
-              marker-start="url(#arrC2)" marker-end="url(#arrC)"/>
-            <text x="${arrX + 5}" y="${y0 + rH / 2 + 4}" text-anchor="start"
-              font-family="Inter,sans-serif" font-size="9" fill="var(--muted)">${dims.h} mm</text>
-          `;
-          document.getElementById('configSvgLabel').textContent = 'Proporcionální nákres — perspektivní pohled';
-        }
-
-        svg.innerHTML = content;
-      }
-
-      function buildRectSVG(x, y, w, h, dims) {
-        const arrY = y + h + 18;
-        const arrX = x + w + 14;
-        return `
-          <defs>
-            <marker id="arrM" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-              <path d="M0,0 L6,3 L0,6" fill="none" stroke="var(--gold)" stroke-width="1"/>
-            </marker>
-            <marker id="arrM2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse">
-              <path d="M0,0 L6,3 L0,6" fill="none" stroke="var(--gold)" stroke-width="1"/>
-            </marker>
-          </defs>
-          <rect x="${x}" y="${y}" width="${w}" height="${h}"
-            fill="rgba(160,120,40,0.04)" stroke="var(--gold)" stroke-width="1.5"/>
-          <line x1="${x}" y1="${arrY}" x2="${x + w}" y2="${arrY}"
-            stroke="var(--gold)" stroke-width="0.75"
-            marker-start="url(#arrM2)" marker-end="url(#arrM)"/>
-          <text x="${x + w / 2}" y="${arrY + 11}" text-anchor="middle"
-            font-family="Inter,sans-serif" font-size="9" fill="var(--muted)">${dims.l} mm</text>
-          <line x1="${arrX}" y1="${y}" x2="${arrX}" y2="${y + h}"
-            stroke="var(--gold)" stroke-width="0.75"
-            marker-start="url(#arrM2)" marker-end="url(#arrM)"/>
-          <text x="${arrX + 5}" y="${y + h / 2 + 4}" text-anchor="start"
-            font-family="Inter,sans-serif" font-size="9" fill="var(--muted)">${dims.h} mm</text>
-        `;
-      }
-
-      // Step 3 — summary
-      function buildSummary() {
-        const m = selectedModel;
-        const dims = getDims();
-        const isBowl = currentShape === 'bowl';
-
-        document.getElementById('sumModel').textContent = m.name;
-        document.getElementById('sumModelNum').textContent =
-          m.model === 'custom' ? 'Zakázkový model' : 'Model ' + String(m.model).padStart(2,'0');
-
-        if (isBowl) {
-          document.getElementById('sumBoxL').style.display = 'none';
-          document.getElementById('sumBoxW').style.display = 'none';
-          document.getElementById('sumBoxDiam').style.display = '';
-          document.getElementById('sumDiam').textContent = dims.diam;
-          document.getElementById('sumBoxH').querySelector('.csb-label').textContent = 'Výška';
-          document.getElementById('sumHeight').textContent = dims.h;
-          const area = Math.round(Math.PI * (dims.diam / 2) * (dims.diam / 2) / 100);
-          document.getElementById('sumArea').textContent = area;
-          document.getElementById('sumBoxArea').querySelector('.csb-label').textContent = 'Plocha (∅)';
-        } else {
-          document.getElementById('sumBoxL').style.display = '';
-          document.getElementById('sumBoxW').style.display = '';
-          document.getElementById('sumBoxDiam').style.display = 'none';
-          document.getElementById('sumLength').textContent = dims.l;
-          document.getElementById('sumWidth').textContent = dims.w;
-          document.getElementById('sumHeight').textContent = dims.h;
-          const area = Math.round((dims.l / 10) * (dims.w / 10));
-          document.getElementById('sumArea').textContent = area;
-          document.getElementById('sumBoxArea').querySelector('.csb-label').textContent = 'Plocha podstavy';
-        }
-      }
-
-      // Tlačítko "Poptat tuto konfiguraci" — předvyplní kontaktní formulář
-      document.getElementById('configInquiryBtn').addEventListener('click', function() {
-        const m = selectedModel;
-        const dims = getDims();
-        const isBowl = currentShape === 'bowl';
-
-        // Vyplní select modelu v kontaktním formuláři
-        const modelSelect = document.getElementById('model');
-        if (modelSelect) {
-          const optVal = m.model === 'custom' ? 'custom' : m.model;
-          for (let opt of modelSelect.options) {
-            if (opt.value === optVal || opt.value === m.model) {
-              opt.selected = true;
-              break;
-            }
-          }
-        }
-
-        // Vyplní zprávu s konfigurací
-        let configText = 'Konfigurace z konfigurátoru:\n';
-        configText += 'Model: ' + (m.model === 'custom' ? 'Zakázkový' : 'Model ' + String(m.model).padStart(2,'0') + ' — ' + m.name) + '\n';
-        if (isBowl) {
-          configText += 'Průměr: ' + dims.diam + ' mm\n';
-          configText += 'Výška: ' + dims.h + ' mm\n';
-        } else {
-          configText += 'Délka: ' + dims.l + ' mm\n';
-          configText += 'Šířka: ' + dims.w + ' mm\n';
-          configText += 'Výška: ' + dims.h + ' mm\n';
-        }
-        configText += '\nDalší poznámky: ';
-
-        const msgField = document.getElementById('message');
-        if (msgField) msgField.value = configText;
-
-        // Scroll na formulář
-        document.getElementById('kontakt').scrollIntoView({ behavior: 'smooth' });
-        setTimeout(() => {
-          const nameField = document.getElementById('name');
-          if (nameField) nameField.focus();
-        }, 600);
-      });
-
-    })();
-  </script>
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+  renderTabs();
+  renderContent();
+  observeReveal();
+  setupForm('mainForm','mainSuccess');
+  setupForm('modalForm', null);
+});
+</script>
 </body>
 </html>
