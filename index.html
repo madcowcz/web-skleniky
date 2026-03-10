@@ -204,18 +204,16 @@ footer{background:var(--navy);border-top:1px solid var(--border);padding:2.8rem 
   .frow{grid-template-columns:1fr}
   .footer-grid{grid-template-columns:1fr}
   .footer-bottom{flex-direction:column;gap:.6rem;text-align:center}
-  .ref-grid{grid-template-columns:repeat(2,1fr)!important;grid-auto-rows:150px!important}
-  .ref-item.tall{grid-row:span 1!important}
-  .ref-item.wide{grid-column:span 2}
+  .ref-grid{grid-template-columns:repeat(2,1fr)!important;grid-auto-rows:160px!important}
+  .ref-item.wide{grid-column:span 1!important}
 }
 
 /* ── REALIZACE ── */
 #realizace{padding:80px 5%;background:#f3f0eb}
-.ref-grid{max-width:1200px;margin:2.5rem auto 0;display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:240px;gap:8px}
+.ref-grid{max-width:1200px;margin:2.5rem auto 0;display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:250px;gap:8px}
 .ref-item{overflow:hidden;border-radius:6px;cursor:pointer;position:relative;background:var(--navy2)}
 .ref-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
 .ref-item:hover img{transform:scale(1.05)}
-.ref-item.tall{grid-row:span 2}
 .ref-item.wide{grid-column:span 2}
 .ref-overlay{position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(13,27,42,.8));opacity:0;transition:opacity .3s;display:flex;align-items:flex-end;padding:.75rem 1rem}
 .ref-item:hover .ref-overlay{opacity:1}
@@ -365,7 +363,7 @@ footer{background:var(--navy);border-top:1px solid var(--border);padding:2.8rem 
       <p class="sdesc">Vybrané zakázky z naší dílny — ohýbaná skla, pochozí plochy, bezpečnostní výplně a další.</p>
     </div>
     <div class="ref-grid">
-      <div class="ref-item tall" onclick="openLb(0)">
+      <div class="ref-item wide" onclick="openLb(0)">
         <img src="https://9a13a0b074.clvaw-cdnwnd.com/e5fb6fe7aa10130b6487ecdc7f6002e1/200000129-66c9f66ca1/d9dd9f36-9131-463b-9a52-a8d8ba4f34d6-0.webp?ph=9a13a0b074" alt="Realizace" loading="lazy">
         <div class="ref-overlay"><span class="ref-label">Realizace</span></div>
       </div>
@@ -377,7 +375,7 @@ footer{background:var(--navy);border-top:1px solid var(--border);padding:2.8rem 
         <img src="https://9a13a0b074.clvaw-cdnwnd.com/e5fb6fe7aa10130b6487ecdc7f6002e1/200000078-d6fd7d6fd9/ohybane_sklo2.webp?ph=9a13a0b074" alt="Ohýbané sklo" loading="lazy">
         <div class="ref-overlay"><span class="ref-label">Ohýbané sklo</span></div>
       </div>
-      <div class="ref-item wide" onclick="openLb(3)">
+      <div class="ref-item" onclick="openLb(3)">
         <img src="https://9a13a0b074.clvaw-cdnwnd.com/e5fb6fe7aa10130b6487ecdc7f6002e1/200000081-7435c7435f/ohybane_sklo3.webp?ph=9a13a0b074" alt="Ohýbané sklo" loading="lazy">
         <div class="ref-overlay"><span class="ref-label">Ohýbané sklo</span></div>
       </div>
@@ -385,7 +383,7 @@ footer{background:var(--navy);border-top:1px solid var(--border);padding:2.8rem 
         <img src="https://9a13a0b074.clvaw-cdnwnd.com/e5fb6fe7aa10130b6487ecdc7f6002e1/200000070-6c4506c452/pochozi_sklo2.webp?ph=9a13a0b074" alt="Pochozí sklo" loading="lazy">
         <div class="ref-overlay"><span class="ref-label">Pochozí sklo</span></div>
       </div>
-      <div class="ref-item" onclick="openLb(5)">
+      <div class="ref-item wide" onclick="openLb(5)">
         <img src="https://9a13a0b074.clvaw-cdnwnd.com/e5fb6fe7aa10130b6487ecdc7f6002e1/200000072-5144f51452/stojanek.webp?ph=9a13a0b074" alt="Zakázka na míru" loading="lazy">
         <div class="ref-overlay"><span class="ref-label">Zakázka na míru</span></div>
       </div>
@@ -397,7 +395,7 @@ footer{background:var(--navy);border-top:1px solid var(--border);padding:2.8rem 
         <img src="https://9a13a0b074.clvaw-cdnwnd.com/e5fb6fe7aa10130b6487ecdc7f6002e1/200000073-8077f80781/263156331_437913667973203_2795837955905088235_n.webp?ph=9a13a0b074" alt="Realizace" loading="lazy">
         <div class="ref-overlay"><span class="ref-label">Realizace</span></div>
       </div>
-      <div class="ref-item tall" onclick="openLb(8)">
+      <div class="ref-item" onclick="openLb(8)">
         <img src="https://9a13a0b074.clvaw-cdnwnd.com/e5fb6fe7aa10130b6487ecdc7f6002e1/200000144-354b3354b5/Untitled.webp?ph=9a13a0b074" alt="Zakázka" loading="lazy">
         <div class="ref-overlay"><span class="ref-label">Zakázka</span></div>
       </div>
